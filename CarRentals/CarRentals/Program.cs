@@ -16,14 +16,12 @@ namespace CarRentals
             
             CarCRUD option = new CarCRUD();
             
-            option.Create(car4);
-            option.Create(car3);
-            option.Create(car2);
-            option.Create(car1);
+            //option.Create(car4);
+            //option.Create(car3);
+            //option.Create(car2);
+            //option.Create(car1);
 
-            
-
-            option.Update(new Car(3, 2018, 3, "grey", Transmition.Manual, Brand.Volkswagen));
+            //option.Update(new Car(3, 2018, 3, "grey", Transmition.Manual, Brand.Volkswagen));
 
             //option.Delete(2);
 

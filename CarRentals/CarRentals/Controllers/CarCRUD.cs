@@ -18,23 +18,19 @@ namespace CarRentals
             Converters = { new JsonStringEnumConverter() }
         };
 
-
         private List<Car> CarList;
-
 
         public CarCRUD()
         {
             ReadJson();
         }
 
-
-      
         public void Create(Car car)
         {
-            CarList.Add(car);
+            if(car != null)
+                CarList.Add(car);
             SaveChanges();
         }
-
 
         public Car Get(int id)
         {
@@ -57,7 +53,6 @@ namespace CarRentals
             return Result;
         }
 
-
         public Car Update(Car car)
         {
 
@@ -74,7 +69,6 @@ namespace CarRentals
             return car;
         }
 
-
         public void Delete(int id)
         {
             Car ToDelete = Get(id);
@@ -86,7 +80,6 @@ namespace CarRentals
 
             SaveChanges();
         }
-
 
         public void ReadJson()
         {
@@ -103,7 +96,7 @@ namespace CarRentals
             }
             catch
             {
-
+                
             }
         }
 
@@ -117,7 +110,5 @@ namespace CarRentals
         {
             return System.IO.File.ReadAllText(PATH);
         }
-
-
     }
 }
