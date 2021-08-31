@@ -21,18 +21,20 @@ namespace CarRentals
             option.Create(car2);
             option.Create(car1);
 
+            
+
             option.Update(new Car(3, 2018, 3, "grey", Transmition.Manual, Brand.Volkswagen));
 
-            option.Delete(2);
+            //option.Delete(2);
 
-            try
-            {
-                Console.WriteLine(option.Get(2).ToString());
-            }
-            catch (CarNotFoundException e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            //try
+            //{
+            //    Console.WriteLine(option.Get(2).ToString());
+            //}
+            //catch (CarNotFoundException e)
+            //{
+            //    Console.WriteLine(e.Message);
+            //}
 
             Console.WriteLine("\n\n\n" + option.ReadFile());
             Console.ReadKey();

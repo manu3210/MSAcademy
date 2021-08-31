@@ -10,7 +10,14 @@ namespace CarRentals
 {
     public class CarCRUD
     {
-        const string PATH = @"D:\Usuarios\Manu\Escritorio\Academy\MSAcademy\CarRentals\Cars.json";
+        const string PATH = @"Cars.json";
+
+        JsonSerializerOptions options = new()
+        {
+            WriteIndented = true,
+            Converters = { new JsonStringEnumConverter() }
+        };
+
 
         private List<Car> CarList;
 
@@ -91,7 +98,7 @@ namespace CarRentals
 
                 if (!string.IsNullOrEmpty(json))
                 {
-                    CarList = JsonSerializer.Deserialize<List<Car>>(json);
+                    CarList = JsonSerializer.Deserialize<List<Car>>(json, options);
                 }
             }
             catch
@@ -102,8 +109,6 @@ namespace CarRentals
 
         public void SaveChanges()
         {
-            
-            var options = new JsonSerializerOptions { WriteIndented = true, Converters = { new JsonStringEnumConverter() } };
             string json = JsonSerializer.Serialize(CarList, options);
             System.IO.File.WriteAllText(PATH, json);
         }
