@@ -1,5 +1,6 @@
 ﻿using CarRentals.Enum;
 using CarRentals.Exceptions;
+using Models;
 using System;
 
 namespace CarRentals

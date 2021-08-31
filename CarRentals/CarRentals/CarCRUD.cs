@@ -1,9 +1,10 @@
-﻿
-using CarRentals.Exceptions;
-using Newtonsoft.Json;
+﻿using CarRentals.Exceptions;
+using Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace CarRentals
 {
@@ -20,6 +21,7 @@ namespace CarRentals
         }
 
 
+      
         public void Create(Car car)
         {
             CarList.Add(car);
@@ -85,11 +87,11 @@ namespace CarRentals
 
             try
             {
-                var json = System.IO.File.ReadAllText(PATH);
+                var json = ReadFile();
 
                 if (!string.IsNullOrEmpty(json))
                 {
-                    CarList = JsonConvert.DeserializeObject<List<Car>>(json);
+                    CarList = JsonSerializer.Deserialize<List<Car>>(json);
                 }
             }
             catch
@@ -100,8 +102,9 @@ namespace CarRentals
 
         public void SaveChanges()
         {
-            var json = JsonConvert.SerializeObject(CarList);
-
+            
+            var options = new JsonSerializerOptions { WriteIndented = true, Converters = { new JsonStringEnumConverter() } };
+            string json = JsonSerializer.Serialize(CarList, options);
             System.IO.File.WriteAllText(PATH, json);
         }
 

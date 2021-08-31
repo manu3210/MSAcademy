@@ -2,7 +2,7 @@
 using System;
 using System.Text;
 
-namespace CarRentals
+namespace Models
 {
     public class Car
     {
