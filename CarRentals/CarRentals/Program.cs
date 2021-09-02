@@ -1,5 +1,4 @@
 ﻿using CarRentals.Enum;
-using CarRentals.Exceptions;
 using Models;
 using System;
 
@@ -14,27 +13,20 @@ namespace CarRentals
             var car3 = new Car(3, 2018, 3, "White", Transmition.Manual, Brand.Volkswagen);
             var car4 = new Car(4, 2019, 3, "Black", Transmition.Manual, Brand.Renault);
             
-            CarCRUD option = new CarCRUD();
-            
-            //option.Create(car4);
-            //option.Create(car3);
-            //option.Create(car2);
-            //option.Create(car1);
+            var carControl = new CarCRUD();
 
-            //option.Update(new Car(3, 2018, 3, "grey", Transmition.Manual, Brand.Volkswagen));
+            //carControl.Create(car4);
+            //carControl.Create(car3);
+            //carControl.Create(car2);
+            //carControl.Create(car1);
 
-            //option.Delete(2);
+            //Console.WriteLine(carControl.Get(3).ToString());
 
-            //try
-            //{
-            //    Console.WriteLine(option.Get(2).ToString());
-            //}
-            //catch (CarNotFoundException e)
-            //{
-            //    Console.WriteLine(e.Message);
-            //}
+            //carControl.Update(new Car(30, 2018, 3, "grey", Transmition.Manual, Brand.Volkswagen));
 
-            Console.WriteLine("\n\n\n" + option.ReadFile());
+            //carControl.Delete(2);
+
+            Console.WriteLine("\n\n\n" + carControl.ReadFile());
             Console.ReadKey();
         }
     }

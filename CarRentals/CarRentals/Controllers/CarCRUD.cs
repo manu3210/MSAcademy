@@ -1,16 +1,19 @@
-﻿using CarRentals.Exceptions;
+﻿using CarRentals.Interfaces;
 using Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Configuration;
 
 namespace CarRentals
 {
-    public class CarCRUD
+    public class CarCRUD : IDataProcessing
     {
-        const string PATH = @"Cars.json";
+        string PATH = ConfigurationManager.AppSettings["JsonFile"].ToString();
 
         JsonSerializerOptions options = new()
         {
@@ -34,34 +37,17 @@ namespace CarRentals
 
         public Car Get(int id)
         {
-            Car Result = null;
-
-            foreach (Car car in CarList)
-            {
-                if (id == car.Id)
-                {
-                    Result = car;
-                    break;
-                }
-            }
-
-            if(Result == null)
-            {
-                throw new CarNotFoundException("The car was not found");
-            }
-
+            Car Result = CarList.Where(car => car.Id == id).FirstOrDefault();
             return Result;
         }
 
         public Car Update(Car car)
         {
+            Car getCar = Get(car.Id);
 
-            for (var i = 0; i < CarList.Count; i++)
+            if (getCar != null)
             {
-                if (car.Id == CarList[i].Id)
-                {
-                    CarList[i] = car;
-                }
+                CarList[CarList.IndexOf(getCar)] = car;
             }
 
             SaveChanges();
@@ -81,34 +67,44 @@ namespace CarRentals
             SaveChanges();
         }
 
-        public void ReadJson()
+        private void ReadJson()
         {
             CarList = new List<Car>();
+            
+            var json = ReadFile();
 
-            try
+            if (!string.IsNullOrEmpty(json))
             {
-                var json = ReadFile();
-
-                if (!string.IsNullOrEmpty(json))
-                {
-                    CarList = JsonSerializer.Deserialize<List<Car>>(json, options);
-                }
+                CarList = JsonSerializer.Deserialize<List<Car>>(json, options);
             }
-            catch
-            {
-                
-            }
+            
         }
 
-        public void SaveChanges()
+        private void SaveChanges()
         {
             string json = JsonSerializer.Serialize(CarList, options);
-            System.IO.File.WriteAllText(PATH, json);
+
+            using(var writer = new StreamWriter(PATH))
+            {
+                writer.Write(json);
+            }
         }
 
         public string ReadFile()
         {
-            return System.IO.File.ReadAllText(PATH);
+            if(File.Exists(PATH))
+            {
+                using (var reader  = new StreamReader(PATH))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+            else
+            {
+                return null;
+            }
+
+
         }
     }
 }
