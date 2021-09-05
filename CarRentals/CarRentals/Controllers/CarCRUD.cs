@@ -13,7 +13,7 @@ namespace CarRentals
 {
     public class CarCRUD : IDataProcessing
     {
-        string PATH = ConfigurationManager.AppSettings["JsonFile"].ToString();
+        string Path = Program.JsonFilePath();
 
         JsonSerializerOptions options = new()
         {
@@ -43,15 +43,15 @@ namespace CarRentals
 
         public Car Update(Car car)
         {
-            Car getCar = Get(car.Id);
+            Car toUpdate = Get(car.Id);
 
-            if (getCar != null)
-            {
-                CarList[CarList.IndexOf(getCar)] = car;
-            }
-
+            toUpdate.Doors = car.Doors;
+            toUpdate.Brand = car.Brand;
+            toUpdate.Color = car.Color;
+            toUpdate.Model = car.Model;
+            toUpdate.Transmition = car.Transmition;
+            
             SaveChanges();
-
             return car;
         }
 
@@ -70,7 +70,6 @@ namespace CarRentals
         private void ReadJson()
         {
             CarList = new List<Car>();
-            
             var json = ReadFile();
 
             if (!string.IsNullOrEmpty(json))
@@ -84,7 +83,7 @@ namespace CarRentals
         {
             string json = JsonSerializer.Serialize(CarList, options);
 
-            using(var writer = new StreamWriter(PATH))
+            using(var writer = new StreamWriter(Path))
             {
                 writer.Write(json);
             }
@@ -92,9 +91,9 @@ namespace CarRentals
 
         public string ReadFile()
         {
-            if(File.Exists(PATH))
+            if(File.Exists(Path))
             {
-                using (var reader  = new StreamReader(PATH))
+                using (var reader  = new StreamReader(Path))
                 {
                     return reader.ReadToEnd();
                 }
