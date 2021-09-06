@@ -13,7 +13,7 @@ namespace CarRentals
 {
     public class CarCRUD : IDataProcessing
     {
-        string Path = Program.JsonFilePath();
+        string _path = Program.JsonFilePath();
 
         JsonSerializerOptions options = new()
         {
@@ -83,7 +83,7 @@ namespace CarRentals
         {
             string json = JsonSerializer.Serialize(CarList, options);
 
-            using(var writer = new StreamWriter(Path))
+            using(var writer = new StreamWriter(_path))
             {
                 writer.Write(json);
             }
@@ -91,9 +91,9 @@ namespace CarRentals
 
         public string ReadFile()
         {
-            if(File.Exists(Path))
+            if(File.Exists(_path))
             {
-                using (var reader  = new StreamReader(Path))
+                using (var reader  = new StreamReader(_path))
                 {
                     return reader.ReadToEnd();
                 }
