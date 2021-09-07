@@ -34,34 +34,6 @@ namespace CarRentals
                     var carControl = new CarCRUD(options);
                     Test(carControl);
                 });
-
-
-        public static string JsonFilePath()
-        {
-            var builder = new ConfigurationBuilder().AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-            var configuration = builder.Build();
-            string path = configuration["JsonFile"];
-            return path;
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         static void Test(CarCRUD carControl)
         {
             Console.WriteLine("\n\n\n" + carControl.ReadFile());
