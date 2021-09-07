@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
@@ -11,8 +11,6 @@ namespace CarRentals
         static async Task Main(string[] args)
         {
             using IHost host = CreateHostBuilder(args).Build();
-
-
             await host.RunAsync();
         }
 
