@@ -13,7 +13,7 @@ namespace CarRentals
 {
     public class CarCRUD : IDataProcessing
     {
-        string _path = Program.JsonFilePath();
+        private readonly string _path;
 
         JsonSerializerOptions options = new()
         {
@@ -23,8 +23,9 @@ namespace CarRentals
 
         private List<Car> CarList;
 
-        public CarCRUD()
+        public CarCRUD(ProgramOptions configuration)
         {
+            _path = configuration.JsonFile;
             ReadJson();
         }
 

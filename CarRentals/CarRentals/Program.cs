@@ -1,45 +1,71 @@
-﻿using CarRentals.Enum;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Models;
 using System;
-using System.IO;
+using System.Threading.Tasks;
 
 namespace CarRentals
 {
     class Program
     {
-        static void Main(string[] args)
+        
+        static async Task Main(string[] args)
         {
-            Test();
+            using IHost host = CreateHostBuilder(args).Build();
+
+
+            await host.RunAsync();
         }
 
-        static void Test ()
-        {
-            var carControl = new CarCRUD();
+        static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((hostingContext, configuration) =>
+                {
+                    configuration.Sources.Clear();
 
-            //carControl.Create(car4);
-            //carControl.Create(car3);
-            //carControl.Create(car2);
-            //carControl.Create(car1);
+                    configuration
+                        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
-            //Console.WriteLine(carControl.Get(3).ToString());
+                    IConfigurationRoot configurationRoot = configuration.Build();
 
-            //carControl.Update(new Car(3, 2018, 3, "grey", Transmition.Manual, Brand.Volkswagen));
+                    var options = new ProgramOptions();
 
-            //carControl.Delete(2);
+                    options.JsonFile = configurationRoot[ProgramOptions.sectionName];
 
-            Console.WriteLine("\n\n\n" + carControl.ReadFile());
-            Console.ReadKey();
-        }
+                    var carControl = new CarCRUD(options);
+                    Test(carControl);
+                });
 
-        public static string JsonFilePath ()
+
+        public static string JsonFilePath()
         {
             var builder = new ConfigurationBuilder().AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
             var configuration = builder.Build();
             string path = configuration["JsonFile"];
             return path;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        static void Test(CarCRUD carControl)
+        {
+            Console.WriteLine("\n\n\n" + carControl.ReadFile());
+            Console.ReadKey();
         }
     }
 }
