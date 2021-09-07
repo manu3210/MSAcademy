@@ -22,7 +22,5 @@ namespace Models
         {
             return "id: " + Id + "\nModel: " + Model + "\nNumber of doors: " + Doors + "\nColor: " + Color + "\nTransmition: " + Transmition.ToString() + "\nBrand: " + Brand.ToString();
         }
-
-
     }
 }
