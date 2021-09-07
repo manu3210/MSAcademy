@@ -1,24 +1,41 @@
-﻿using CarRentals.Interfaces;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using System;
+using System.Threading.Tasks;
 
 namespace CarRentals
 {
     class Program
     {
-        static void Main(string[] args)
+        
+        static async Task Main(string[] args)
         {
-            Test();
+            using IHost host = CreateHostBuilder(args).Build();
+            await host.RunAsync();
         }
 
-        static void Test ()
-        {
-            IDataAccess DataAccess = new DataAccess();
-            var carControl = new CarCRUD(DataAccess);
+        static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((hostingContext, configuration) =>
+                {
+                    configuration.Sources.Clear();
 
-            Console.WriteLine(carControl.ReadFile());
+                    configuration
+                        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+                    IConfigurationRoot configurationRoot = configuration.Build();
+
+                    var options = new ProgramOptions();
+
+                    options.JsonFile = configurationRoot[ProgramOptions.sectionName];
+
+                    var carControl = new CarCRUD(options);
+                    Test(carControl);
+                });
+        static void Test(CarCRUD carControl)
+        {
+            Console.WriteLine("\n\n\n" + carControl.ReadFile());
             Console.ReadKey();
         }
-
-        
     }
 }
