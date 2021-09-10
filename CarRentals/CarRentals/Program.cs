@@ -7,7 +7,6 @@ namespace CarRentals
 {
     class Program
     {
-        
         static async Task Main(string[] args)
         {
             using IHost host = CreateHostBuilder(args).Build();

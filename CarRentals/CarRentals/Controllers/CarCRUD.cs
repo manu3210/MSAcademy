@@ -1,10 +1,8 @@
 ﻿using CarRentals.Interfaces;
 using Models;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -21,9 +19,6 @@ namespace CarRentals
             Converters = { new JsonStringEnumConverter() }
         };
 
-
-        private List<Car> CarList;
-
         public CarCRUD(ProgramOptions configuration)
         {
             _path = configuration.JsonFile;
@@ -32,7 +27,7 @@ namespace CarRentals
 
         public void Create(Car car)
         {
-            if(car != null)
+            if (car != null)
                 CarList.Add(car);
             SaveChanges();
         }
@@ -52,7 +47,7 @@ namespace CarRentals
             toUpdate.Color = car.Color;
             toUpdate.Model = car.Model;
             toUpdate.Transmition = car.Transmition;
-            
+
             SaveChanges();
             return car;
         }
@@ -78,14 +73,14 @@ namespace CarRentals
             {
                 CarList = JsonSerializer.Deserialize<List<Car>>(json, options);
             }
-            
+
         }
 
         private void SaveChanges()
         {
             string json = JsonSerializer.Serialize(CarList, options);
 
-            using(var writer = new StreamWriter(_path.JsonFilePath()))
+            using (var writer = new StreamWriter(_path))
             {
                 writer.Write(json);
             }
@@ -93,9 +88,9 @@ namespace CarRentals
 
         public string ReadFile()
         {
-            if(File.Exists(_path.JsonFilePath()))
+            if (File.Exists(_path))
             {
-                using (var reader  = new StreamReader(_path.JsonFilePath()))
+                using (var reader = new StreamReader(_path))
                 {
                     return reader.ReadToEnd();
                 }
