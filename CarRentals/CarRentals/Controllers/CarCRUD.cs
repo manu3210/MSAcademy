@@ -10,8 +10,9 @@ namespace CarRentals
 {
     public class CarCRUD : IDataProcessing
     {
-        private readonly string _path;
-        private List<Car> CarList;
+        private List<Car> _carList;
+        public ManageJson<Car> JsonFile { get; }
+
 
         JsonSerializerOptions options = new()
         {
@@ -21,20 +22,20 @@ namespace CarRentals
 
         public CarCRUD(ProgramOptions configuration)
         {
-            _path = configuration.JsonFile;
-            ReadJson();
+            JsonFile = new ManageJson<Car>(configuration.JsonFile);
+            _carList = JsonFile.ReadJson();
         }
 
         public void Create(Car car)
         {
             if (car != null)
-                CarList.Add(car);
-            SaveChanges();
+                _carList.Add(car);
+            JsonFile.SaveChanges(_carList);
         }
 
         public Car Get(int id)
         {
-            Car Result = CarList.Where(car => car.Id == id).FirstOrDefault();
+            Car Result = _carList.Where(car => car.Id == id).FirstOrDefault();
             return Result;
         }
 
@@ -48,7 +49,7 @@ namespace CarRentals
             toUpdate.Model = car.Model;
             toUpdate.Transmition = car.Transmition;
 
-            SaveChanges();
+            JsonFile.SaveChanges(_carList);
             return car;
         }
 
@@ -56,49 +57,14 @@ namespace CarRentals
         {
             Car ToDelete = Get(id);
 
-            if (CarList.Contains(ToDelete))
+            if (_carList.Contains(ToDelete))
             {
-                CarList.Remove(ToDelete);
+                _carList.Remove(ToDelete);
             }
 
-            SaveChanges();
+            JsonFile.SaveChanges(_carList);
         }
 
-        private void ReadJson()
-        {
-            CarList = new List<Car>();
-            var json = ReadFile();
-
-            if (!string.IsNullOrEmpty(json))
-            {
-                CarList = JsonSerializer.Deserialize<List<Car>>(json, options);
-            }
-
-        }
-
-        private void SaveChanges()
-        {
-            string json = JsonSerializer.Serialize(CarList, options);
-
-            using (var writer = new StreamWriter(_path))
-            {
-                writer.Write(json);
-            }
-        }
-
-        public string ReadFile()
-        {
-            if (File.Exists(_path))
-            {
-                using (var reader = new StreamReader(_path))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
-            else
-            {
-                return null;
-            }
-        }
+        
     }
 }

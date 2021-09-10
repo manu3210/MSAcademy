@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Models;
 using System;
 using System.Threading.Tasks;
 
@@ -31,9 +32,10 @@ namespace CarRentals
                     var carControl = new CarCRUD(options);
                     Test(carControl);
                 });
-        static void Test(CarCRUD carControl)
+        static void Test(CarCRUD Control)
         {
-            Console.WriteLine("\n\n\n" + carControl.ReadFile());
+            //Control.Update(new Car() { Id = 5, Brand = Enum.Brand.Fiat, Color = "Black", Doors = 2, Model = 2020, Transmition = Enum.Transmition.Automatic });
+            Console.WriteLine("\n\n\n" + Control.JsonFile.ReadFile());
             Console.ReadKey();
         }
     }
