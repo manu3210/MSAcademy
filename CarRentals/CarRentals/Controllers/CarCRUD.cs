@@ -7,13 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Configuration;
 
 namespace CarRentals
 {
     public class CarCRUD : IDataProcessing
     {
-        string _path = Program.JsonFilePath();
+        private readonly string _path;
+        private List<Car> CarList;
 
         JsonSerializerOptions options = new()
         {
@@ -21,10 +21,12 @@ namespace CarRentals
             Converters = { new JsonStringEnumConverter() }
         };
 
+
         private List<Car> CarList;
 
-        public CarCRUD()
+        public CarCRUD(ProgramOptions configuration)
         {
+            _path = configuration.JsonFile;
             ReadJson();
         }
 
@@ -83,7 +85,7 @@ namespace CarRentals
         {
             string json = JsonSerializer.Serialize(CarList, options);
 
-            using(var writer = new StreamWriter(_path))
+            using(var writer = new StreamWriter(_path.JsonFilePath()))
             {
                 writer.Write(json);
             }
@@ -91,9 +93,9 @@ namespace CarRentals
 
         public string ReadFile()
         {
-            if(File.Exists(_path))
+            if(File.Exists(_path.JsonFilePath()))
             {
-                using (var reader  = new StreamReader(_path))
+                using (var reader  = new StreamReader(_path.JsonFilePath()))
                 {
                     return reader.ReadToEnd();
                 }
@@ -102,8 +104,6 @@ namespace CarRentals
             {
                 return null;
             }
-
-
         }
     }
 }
