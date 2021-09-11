@@ -1,13 +1,16 @@
-﻿using Models;
+﻿using CarRentals.Interfaces;
+using Models;
 using System;
 
 namespace CarRentals.Models
 {
-    class Rental
+    public class Rental : IModelForCrud
     {
-        DateTime Beginning { get; set; }
-        DateTime End { get; set; }
-        Customer Customer { get; set; }
-        Car Car { get; set; }
+        public int Id { get; set; }
+        public DateTime Beginning { get; set; }
+        public DateTime End { get; set; }
+        public Customer Customer { get; set; }
+        public Car Car { get; set; }
+        public float price { get; set; }
     }
 }

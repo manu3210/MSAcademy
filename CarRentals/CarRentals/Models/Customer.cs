@@ -1,17 +1,19 @@
-﻿using System;
+﻿using CarRentals.Interfaces;
+using System;
 
 namespace CarRentals.Models
 {
-    class Customer
+    public class Customer : IModelForCrud
     {
-        string Dni { get; set; }
-        string FirstName { get; set; }
-        string LastName { get; set; }
-        string Phone { get; set; }
-        string Adress { get; set; }
-        string City { get; set; }
-        string Province { get; set; }
-        int ZipCode { get; set; }
-        DateTime LastModification { get; set; }
+        public int Id { get; set; }
+        public string Dni { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Phone { get; set; }
+        public string Adress { get; set; }
+        public string City { get; set; }
+        public string Province { get; set; }
+        public int ZipCode { get; set; }
+        public DateTime LastModification { get; set; }
     }
 }

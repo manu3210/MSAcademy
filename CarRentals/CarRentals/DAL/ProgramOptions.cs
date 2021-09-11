@@ -8,7 +8,9 @@ namespace CarRentals
 {
     public class ProgramOptions
     {
-        public static string sectionName = "JsonFile";
+        public static string sectionCarsName = "JsonFile:CarsJsonFile";
+        public static string sectionCustomersName = "JsonFile:CustomersJsonFile";
+        public static string sectionRentalsName = "JsonFile:RentalsJsonFile";
         public string JsonFile { get; set; }
     }
 }

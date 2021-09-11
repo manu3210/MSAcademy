@@ -7,18 +7,18 @@ namespace CarRentals
 {
     public class ManageJson<T>
     {
-        private readonly string _path;
-
-        public ManageJson(string path)
-        {
-            _path = path;
-        }
+        public string _path { get; set; }
 
         JsonSerializerOptions options = new()
         {
             WriteIndented = true,
             Converters = { new JsonStringEnumConverter() }
         };
+
+        public ManageJson(string path)
+        {
+            _path = path;
+        }
 
         public List<T> ReadJson()
         {
