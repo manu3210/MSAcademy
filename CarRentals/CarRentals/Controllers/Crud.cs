@@ -39,6 +39,12 @@ namespace CarRentals.Controllers
 
             Json.SaveChanges(List);
         }
+
+        public List<T> GetAll()
+        {
+            return List;
+        }
+
         public abstract T Update(T element); // To override in child classes
     }
 }

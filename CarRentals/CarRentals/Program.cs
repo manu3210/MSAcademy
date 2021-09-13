@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Models;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace CarRentals
@@ -30,6 +31,11 @@ namespace CarRentals
 
                     IConfigurationRoot configurationRoot = configuration.Build();
 
+                    if(!Directory.Exists("Data"))
+                    {
+                        Directory.CreateDirectory("Data");
+                    }
+
                     var CarOptions = new ProgramOptions();
                     CarOptions.JsonFile = configurationRoot[ProgramOptions.sectionCarsName];
 
@@ -51,7 +57,7 @@ namespace CarRentals
 
         static void CustomerTest(CustomerCRUD Control)
         {
-            Control.Update(new Models.Customer { Id = 1, Adress = "Luro 2541", City = "Mar del Plata", Dni = "32165421", FirstName = "Emanuel", LastName = "Rivas", Phone = "2236543211", Province = "Buenos Aires", ZipCode = 7600, LastModification = DateTime.UtcNow });
+            //Control.Update(new Models.Customer { Id = 1, Adress = "Luro 2541", City = "Mar del Plata", Dni = "32165421", FirstName = "Emanuel", LastName = "Rivas", Phone = "2236543211", Province = "Buenos Aires", ZipCode = 7600, LastModification = DateTime.UtcNow });
             Console.WriteLine("\n\n\n" + Control.Json.ReadFile());
             Console.ReadKey();
         }
