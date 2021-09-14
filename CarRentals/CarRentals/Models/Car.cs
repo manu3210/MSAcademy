@@ -11,10 +11,5 @@ namespace Models
         public string Color { get; set; }
         public Transmition Transmition { get; set; }
         public Brand Brand { get; set; }
-
-        public Car()
-        {
-
-        }
     }
 }

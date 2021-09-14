@@ -3,16 +3,16 @@ using Models;
 
 namespace CarRentals
 {
-    public class CarCRUD : Crud<Car>
+    public class CarCRUD : JsonStorage<Car>
     {
-        public CarCRUD(ProgramOptions configuration) : base(configuration)
+        public CarCRUD(JsonFile configuration) : base(configuration.CarsJsonFile)
         {
 
         }
 
         public override Car Update(Car car)
         {
-            Car toUpdate = Get(car.Id);
+            var toUpdate = Get(car.Id);
 
             toUpdate.Doors = car.Doors;
             toUpdate.Brand = car.Brand;
@@ -20,7 +20,7 @@ namespace CarRentals
             toUpdate.Model = car.Model;
             toUpdate.Transmition = car.Transmition;
 
-            Json.SaveChanges(List);
+            SaveChanges(List);
             return car;
         }
     }

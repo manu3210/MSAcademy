@@ -1,21 +1,17 @@
 ﻿using CarRentals.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CarRentals.Controllers
 {
-    public class CustomerCRUD : Crud<Customer>
+    public class CustomerCRUD : JsonStorage<Customer>
     {
-        public CustomerCRUD(ProgramOptions configuration) : base(configuration)
+        public CustomerCRUD(JsonFile configuration) : base(configuration.CustomersJsonFile)
         {
 
         }
         public override Customer Update(Customer element)
         {
-            Customer toUpdate = Get(element.Id);
+            var toUpdate = Get(element.Id);
 
             toUpdate.FirstName = element.FirstName;
             toUpdate.LastName = element.LastName;
@@ -28,7 +24,7 @@ namespace CarRentals.Controllers
             toUpdate.ZipCode = element.ZipCode;
             toUpdate.LastModification = DateTime.UtcNow;
 
-            Json.SaveChanges(List);
+            SaveChanges(List);
             return element;
         }
     }

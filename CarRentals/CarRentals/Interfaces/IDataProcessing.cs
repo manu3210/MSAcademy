@@ -1,4 +1,6 @@
-﻿namespace CarRentals.Interfaces
+﻿using System.Collections.Generic;
+
+namespace CarRentals.Interfaces
 {
     public interface IDataProcessing<T>
     {
