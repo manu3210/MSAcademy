@@ -18,7 +18,6 @@ namespace CarRentals.Controllers
             toUpdate.Dni = element.Dni;
             toUpdate.Phone = element.Phone;
             toUpdate.Province = element.Province;
-            toUpdate.Id = element.Id;
             toUpdate.ZipCode = element.ZipCode;
             toUpdate.LastModification = DateTime.UtcNow;
         }

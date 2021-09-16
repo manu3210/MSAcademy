@@ -10,7 +10,6 @@ namespace CarRentals.Controllers
         }
         protected override void UpdateData(Rental element, Rental toUpdate)
         {
-            toUpdate.Id = element.Id;
             toUpdate.Car = element.Car;
             toUpdate.Beginning = element.Beginning;
             toUpdate.Customer = element.Customer;

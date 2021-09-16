@@ -58,6 +58,7 @@ namespace CarRentals.Controllers
         {
             var toUpdate = Get(element.Id);
 
+            toUpdate.Id = element.Id;
             UpdateData(element, toUpdate);
 
             SaveChanges(List);
