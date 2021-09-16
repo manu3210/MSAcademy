@@ -10,18 +10,13 @@ namespace CarRentals
 
         }
 
-        public override Car Update(Car car)
+        protected override void UpdateData(Car element, Car toUpdate)
         {
-            var toUpdate = Get(car.Id);
-
-            toUpdate.Doors = car.Doors;
-            toUpdate.Brand = car.Brand;
-            toUpdate.Color = car.Color;
-            toUpdate.Model = car.Model;
-            toUpdate.Transmition = car.Transmition;
-
-            SaveChanges(List);
-            return car;
+            toUpdate.Doors = element.Doors;
+            toUpdate.Brand = element.Brand;
+            toUpdate.Color = element.Color;
+            toUpdate.Model = element.Model;
+            toUpdate.Transmition = element.Transmition;
         }
     }
 }

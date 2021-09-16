@@ -40,7 +40,7 @@ namespace CarRentals
 
         static void Test(CarCRUD Control)
         {
-            //Control.Update(new Car() { Id = 5, Brand = Enum.Brand.Fiat, Color = "Red", Doors = 2, Model = 2020, Transmition = Enum.Transmition.Automatic });
+            //Control.Update(new Car() { Id = 5, Brand = Enum.Brand.Fiat, Color = "White", Doors = 5, Model = 2020, Transmition = Enum.Transmition.Automatic });
             Console.WriteLine("\n\n\n" + Control.ReadFile());
             Console.ReadKey();
         }

@@ -54,7 +54,18 @@ namespace CarRentals.Controllers
             return List;
         }
 
-        public abstract T Update(T element); // To override in child classes
+        public T Update (T element)
+        {
+            var toUpdate = Get(element.Id);
+
+            UpdateData(element, toUpdate);
+
+            SaveChanges(List);
+            return element;
+        }
+
+
+        protected abstract void UpdateData(T element, T toUpdate); 
 
         private List<T> ReadJson()
         {

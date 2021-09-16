@@ -9,10 +9,8 @@ namespace CarRentals.Controllers
         {
 
         }
-        public override Customer Update(Customer element)
+        protected override void UpdateData(Customer element, Customer toUpdate)
         {
-            var toUpdate = Get(element.Id);
-
             toUpdate.FirstName = element.FirstName;
             toUpdate.LastName = element.LastName;
             toUpdate.Adress = element.Adress;
@@ -23,9 +21,6 @@ namespace CarRentals.Controllers
             toUpdate.Id = element.Id;
             toUpdate.ZipCode = element.ZipCode;
             toUpdate.LastModification = DateTime.UtcNow;
-
-            SaveChanges(List);
-            return element;
         }
     }
 }
