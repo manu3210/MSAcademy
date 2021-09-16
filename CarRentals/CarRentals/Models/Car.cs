@@ -1,10 +1,9 @@
 ﻿using CarRentals.Enum;
-using System;
-using System.Text;
+using CarRentals.Interfaces;
 
 namespace Models
 {
-    public class Car
+    public class Car : IModelForCrud
     {
         public int Id { get; set; }
         public int Model { get; set; }
@@ -12,15 +11,5 @@ namespace Models
         public string Color { get; set; }
         public Transmition Transmition { get; set; }
         public Brand Brand { get; set; }
-
-        public Car()
-        {
-
-        }
-
-        public override string ToString()
-        {
-            return "id: " + Id + "\nModel: " + Model + "\nNumber of doors: " + Doors + "\nColor: " + Color + "\nTransmition: " + Transmition.ToString() + "\nBrand: " + Brand.ToString();
-        }
     }
 }

@@ -1,17 +1,12 @@
-﻿using Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace CarRentals.Interfaces
 {
-    interface IDataProcessing
+    public interface IDataProcessing<T>
     {
-        public void Create(Car car);
-        public Car Get(int id);
-        public Car Update(Car car);
+        public void Create(T element);
+        public T Get(int id);
+        public T Update(T element);
         public void Delete(int id);
     }
 }
