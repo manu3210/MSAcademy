@@ -1,4 +1,5 @@
 ﻿using CarRentals.Models;
+using CarRentalsWebAPI.DTO;
 using CarRentalsWebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,14 +22,14 @@ namespace CarRentalsWebAPI.Controllers
 
         // GET: api/Rentals
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Rental>>> GetRentals()
+        public async Task<ActionResult<IEnumerable<RentalDto>>> GetRentals()
         {
-            return await _context.Rentals.ToListAsync();
+            return await _context.Rentals.Select(x => new RentalDto(x)).ToListAsync();
         }
 
         // GET: api/Rentals/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Rental>> GetRental(int id)
+        public async Task<ActionResult<RentalDto>> GetRental(int id)
         {
             var rental = await _context.Rentals.FindAsync(id);
 
@@ -37,19 +38,31 @@ namespace CarRentalsWebAPI.Controllers
                 return NotFound();
             }
 
-            return rental;
+            return new RentalDto(rental);
         }
 
         // PUT: api/Rentals/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRental(int id, Rental rental)
+        public async Task<IActionResult> PutRental(int id, RentalDto rental)
         {
             if (id != rental.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(rental).State = EntityState.Modified;
+            var rentalModel = await _context.Rentals.FindAsync(id);
+
+            if (rentalModel == null)
+            {
+                return null;
+            }
+
+            rentalModel.Id = rental.Id;
+            rentalModel.Beginning = rental.Beginning;
+            rentalModel.End = rental.End;
+            rentalModel.Price = rental.Price;
+            rentalModel.Customer = CustomerDto.DtoToEntity(rental.Customer);
+            rentalModel.Car = CarDto.DtoToEntity(rental.Car);
 
             try
             {
@@ -72,9 +85,9 @@ namespace CarRentalsWebAPI.Controllers
 
         // POST: api/Rentals
         [HttpPost]
-        public async Task<ActionResult<Rental>> PostRental(Rental rental)
+        public async Task<ActionResult<Rental>> PostRental(RentalDto rental)
         {
-            _context.Rentals.Add(rental);
+            _context.Rentals.Add(RentalDto.DtoToEntity(rental));
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetRental", new { id = rental.Id }, rental);

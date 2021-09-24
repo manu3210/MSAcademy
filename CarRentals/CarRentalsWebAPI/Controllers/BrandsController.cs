@@ -1,4 +1,5 @@
-﻿using CarRentalsWebAPI.Models;
+﻿using CarRentalsWebAPI.DTO;
+using CarRentalsWebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -20,14 +21,14 @@ namespace CarRentalsWebAPI.Controllers
 
         // GET: api/Brands
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Brand>>> GetBrands()
+        public async Task<ActionResult<IEnumerable<BrandDto>>> GetBrands()
         {
-            return await _context.Brands.ToListAsync();
+            return await _context.Brands.Select(x => new BrandDto(x)).ToListAsync();
         }
 
         // GET: api/Brands/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Brand>> GetBrand(int id)
+        public async Task<ActionResult<BrandDto>> GetBrand(int id)
         {
             var brand = await _context.Brands.FindAsync(id);
 
@@ -36,19 +37,27 @@ namespace CarRentalsWebAPI.Controllers
                 return NotFound();
             }
 
-            return brand;
+            return new BrandDto(brand);
         }
 
         // PUT: api/Brands/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBrand(int id, Brand brand)
+        public async Task<IActionResult> PutBrand(int id, BrandDto brand)
         {
             if (id != brand.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(brand).State = EntityState.Modified;
+            var brandModel = await _context.Brands.FindAsync(id);
+
+            if (brandModel == null)
+            {
+                return NotFound();
+            }
+
+            brandModel.Id = brand.Id;
+            brandModel.BrandName = brand.BrandName;
 
             try
             {
@@ -71,12 +80,12 @@ namespace CarRentalsWebAPI.Controllers
 
         // POST: api/Brands
         [HttpPost]
-        public async Task<ActionResult<Brand>> PostBrand(Brand brand)
+        public async Task<ActionResult<BrandDto>> PostBrand(BrandDto brandDto)
         {
-            _context.Brands.Add(brand);
+            _context.Brands.Add(BrandDto.DtoToEntity(brandDto));
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetBrand", new { id = brand.Id }, brand);
+            return CreatedAtAction("GetBrand", new { id = brandDto.Id }, brandDto);
         }
 
         // DELETE: api/Brands/5

@@ -1,4 +1,5 @@
-﻿using CarRentalsWebAPI.Models;
+﻿using CarRentalsWebAPI.DTO;
+using CarRentalsWebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
@@ -21,14 +22,14 @@ namespace CarRentalsWebAPI.Controllers
 
         // GET: api/Cars
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Car>>> GetCars()
+        public async Task<ActionResult<IEnumerable<CarDto>>> GetCars()
         {
-            return await _context.Cars.ToListAsync();
+            return await _context.Cars.Select(x => new CarDto(x)).ToListAsync();
         }
 
         // GET: api/Cars/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Car>> GetCar(int id)
+        public async Task<ActionResult<CarDto>> GetCar(int id)
         {
             var car = await _context.Cars.FindAsync(id);
 
@@ -37,19 +38,32 @@ namespace CarRentalsWebAPI.Controllers
                 return NotFound();
             }
 
-            return car;
+            return new CarDto(car);
         }
 
         // PUT: api/Cars/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCar(int id, Car car)
+        public async Task<IActionResult> PutCar(int id, CarDto carDto)
         {
-            if (id != car.Id)
+            if (id != carDto.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(car).State = EntityState.Modified;
+            var carModel = await _context.Cars.FindAsync(id);
+
+            if (carModel == null)
+            {
+                return NotFound();
+            }
+
+            carModel.Id = carDto.Id;
+            carModel.Doors = carDto.Doors;
+            carModel.Brand = BrandDto.DtoToEntity(carDto.Brand);
+            carModel.Color = carDto.Color;
+            carModel.IsRented = carDto.IsRented;
+            carModel.Transmition = carDto.Transmition;
+            carModel.Model = carDto.Model;
 
             try
             {
@@ -72,9 +86,9 @@ namespace CarRentalsWebAPI.Controllers
 
         // POST: api/Cars
         [HttpPost]
-        public async Task<ActionResult<Car>> PostCar(Car car)
+        public async Task<ActionResult<Car>> PostCar(CarDto car)
         {
-            _context.Cars.Add(car);
+            _context.Cars.Add(CarDto.DtoToEntity(car));
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetCar", new { id = car.Id }, car);
