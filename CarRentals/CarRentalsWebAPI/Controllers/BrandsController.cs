@@ -1,5 +1,6 @@
 ﻿using CarRentalsWebAPI.DTO;
 using CarRentalsWebAPI.Models;
+using CarRentalsWebAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -12,25 +13,32 @@ namespace CarRentalsWebAPI.Controllers
     [ApiController]
     public class BrandsController : ControllerBase
     {
-        private readonly CarRentalsContext _context;
+        private readonly IBrandService _brandService;
 
-        public BrandsController(CarRentalsContext context)
+        public BrandsController(IBrandService brandService)
         {
-            _context = context;
+            _brandService = brandService;
         }
-
+        
         // GET: api/Brands
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BrandDto>>> GetBrands()
+        public ActionResult<List<BrandDto>> GetBrands()
         {
-            return await _context.Brands.Select(x => new BrandDto(x)).ToListAsync();
+            List<BrandDto> list = new List<BrandDto>();
+
+            foreach (Brand item in _brandService.GetAll()) 
+            {
+                list.Add(new BrandDto(item));
+            }
+
+            return list;
         }
 
         // GET: api/Brands/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<BrandDto>> GetBrand(int id)
+        public ActionResult<BrandDto> GetBrand(int id)
         {
-            var brand = await _context.Brands.FindAsync(id);
+            var brand = _brandService.Get(id);
 
             if (brand == null)
             {
@@ -42,50 +50,35 @@ namespace CarRentalsWebAPI.Controllers
 
         // PUT: api/Brands/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBrand(int id, BrandDto brand)
+        public IActionResult PutBrand(int id, BrandDto brand)
         {
-            var brandModel = await _context.Brands.FindAsync(id);
+            var toUpdate = _brandService.Update(id, BrandDto.DtoToEntity(brand));
 
-            if (brandModel == null)
+            if (toUpdate == null)
             {
                 return NotFound();
             }
 
-            brandModel.BrandName = brand.BrandName;
-            await _context.SaveChangesAsync();
-
             return NoContent();
         }
-
+        
         // POST: api/Brands
         [HttpPost]
-        public async Task<ActionResult<BrandDto>> PostBrand(BrandDto brandDto)
+        public ActionResult<BrandDto> PostBrand(BrandDto brandDto)
         {
-            _context.Brands.Add(BrandDto.DtoToEntity(brandDto));
-            await _context.SaveChangesAsync();
+            var brand = BrandDto.DtoToEntity(brandDto);
+            var brandAdded = _brandService.Create(brand);
 
-            return CreatedAtAction("GetBrand", new { id = brandDto.Id }, brandDto);
+            return new BrandDto(brandAdded);
         }
 
         // DELETE: api/Brands/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBrand(int id)
         {
-            var brand = await _context.Brands.FindAsync(id);
-            if (brand == null)
-            {
-                return NotFound();
-            }
-
-            _context.Brands.Remove(brand);
-            await _context.SaveChangesAsync();
+            _brandService.Delete(id);
 
             return NoContent();
-        }
-
-        private bool BrandExists(int id)
-        {
-            return _context.Brands.Any(e => e.Id == id);
         }
     }
 }

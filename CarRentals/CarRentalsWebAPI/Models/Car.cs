@@ -4,9 +4,8 @@ using CarRentalsWebAPI.Models;
 
 namespace Models
 {
-    public class Car : IModelForCrud
+    public class Car : BaseModel
     {
-        public int Id { get; set; }
         public string Model { get; set; }
         public int Doors { get; set; }
         public string Color { get; set; }

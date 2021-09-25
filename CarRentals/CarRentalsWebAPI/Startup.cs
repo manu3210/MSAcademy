@@ -1,4 +1,8 @@
+using CarRentals.Interfaces;
+using CarRentalsWebAPI.Controllers;
 using CarRentalsWebAPI.Models;
+using CarRentalsWebAPI.Repository;
+using CarRentalsWebAPI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,6 +33,8 @@ namespace CarRentalsWebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<CarRentalsContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CarRentalsDB")));
+            services.AddScoped<IBrandRepository, BrandRepository>();
+            services.AddScoped<IBrandService, BrandService>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

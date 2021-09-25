@@ -1,11 +1,11 @@
 ﻿using CarRentals.Interfaces;
+using CarRentalsWebAPI.Models;
 using System;
 
 namespace CarRentals.Models
 {
-    public class Customer : IModelForCrud
+    public class Customer : BaseModel
     {
-        public int Id { get; set; }
         public string Dni { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
