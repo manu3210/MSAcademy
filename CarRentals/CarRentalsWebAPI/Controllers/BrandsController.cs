@@ -44,11 +44,6 @@ namespace CarRentalsWebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBrand(int id, BrandDto brand)
         {
-            if (id != brand.Id)
-            {
-                return BadRequest();
-            }
-
             var brandModel = await _context.Brands.FindAsync(id);
 
             if (brandModel == null)
@@ -56,24 +51,8 @@ namespace CarRentalsWebAPI.Controllers
                 return NotFound();
             }
 
-            brandModel.Id = brand.Id;
             brandModel.BrandName = brand.BrandName;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!BrandExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }

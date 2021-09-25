@@ -45,11 +45,6 @@ namespace CarRentalsWebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCar(int id, CarDto carDto)
         {
-            if (id != carDto.Id)
-            {
-                return BadRequest();
-            }
-
             var carModel = await _context.Cars.FindAsync(id);
 
             if (carModel == null)
@@ -64,22 +59,8 @@ namespace CarRentalsWebAPI.Controllers
             carModel.IsRented = carDto.IsRented;
             carModel.Transmition = carDto.Transmition;
             carModel.Model = carDto.Model;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CarExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }

@@ -44,11 +44,6 @@ namespace CarRentalsWebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCustomer(int id, CustomerDto customer)
         {
-            if (id != customer.Id)
-            {
-                return BadRequest();
-            }
-
             var customerModel = await _context.Customers.FindAsync(id);
 
             if (customerModel == null)
@@ -67,21 +62,7 @@ namespace CarRentalsWebAPI.Controllers
             customerModel.LastModification = customer.LastModification;
             customerModel.ZipCode = customer.ZipCode;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CustomerExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
