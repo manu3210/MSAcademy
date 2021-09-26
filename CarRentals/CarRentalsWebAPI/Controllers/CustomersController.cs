@@ -1,9 +1,8 @@
-﻿using CarRentalsWebAPI.DTO;
-using CarRentalsWebAPI.Models;
+﻿using CarRentals.Models;
+using CarRentalsWebAPI.DTO;
+using CarRentalsWebAPI.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CarRentalsWebAPI.Controllers
@@ -12,25 +11,32 @@ namespace CarRentalsWebAPI.Controllers
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        private readonly CarRentalsContext _context;
+        private readonly ICustomerService _customerService;
 
-        public CustomersController(CarRentalsContext context)
+        public CustomersController(ICustomerService customerService)
         {
-            _context = context;
+            _customerService = customerService;
         }
 
-        // GET: api/Customers
+        // GET: api/Customer
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CustomerDto>>> GetCustomers()
+        public ActionResult<List<CustomerDto>> GetCustomers()
         {
-            return await _context.Customers.Select(x => new CustomerDto(x)).ToListAsync();
+            List<CustomerDto> list = new List<CustomerDto>();
+
+            foreach (Customer item in _customerService.GetAll())
+            {
+                list.Add(new CustomerDto(item));
+            }
+
+            return list;
         }
 
-        // GET: api/Customers/5
+        // GET: api/Customer/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<CustomerDto>> GetCustomer(int id)
+        public ActionResult<CustomerDto> GetCustomer(int id)
         {
-            var customer = await _context.Customers.FindAsync(id);
+            var customer = _customerService.Get(id);
 
             if (customer == null)
             {
@@ -40,62 +46,37 @@ namespace CarRentalsWebAPI.Controllers
             return new CustomerDto(customer);
         }
 
-        // PUT: api/Customers/5
+        // PUT: api/Customer/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCustomer(int id, CustomerDto customer)
+        public IActionResult PutCustomer(int id, CustomerDto customer)
         {
-            var customerModel = await _context.Customers.FindAsync(id);
+            var toUpdate = _customerService.Update(id, CustomerDto.DtoToEntity(customer));
 
-            if (customerModel == null)
-            {
-                return null;
-            }
-
-            customerModel.Id = customer.Id;
-            customerModel.Dni = customer.Dni;
-            customerModel.FirstName = customer.FirstName;
-            customerModel.LastName = customer.LastName;
-            customerModel.Phone = customer.Phone;
-            customerModel.Adress = customer.Adress;
-            customerModel.City = customer.City;
-            customerModel.Province = customer.Province;
-            customerModel.LastModification = customer.LastModification;
-            customerModel.ZipCode = customer.ZipCode;
-
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        // POST: api/Customers
-        [HttpPost]
-        public async Task<ActionResult<CustomerDto>> PostCustomer(CustomerDto customer)
-        {
-            _context.Customers.Add(CustomerDto.DtoToEntity(customer));
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetCustomer", new { id = customer.Id }, customer);
-        }
-
-        // DELETE: api/Customers/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCustomer(int id)
-        {
-            var customer = await _context.Customers.FindAsync(id);
-            if (customer == null)
+            if (toUpdate == null)
             {
                 return NotFound();
             }
 
-            _context.Customers.Remove(customer);
-            await _context.SaveChangesAsync();
-
             return NoContent();
         }
 
-        private bool CustomerExists(int id)
+        // POST: api/Customer
+        [HttpPost]
+        public ActionResult<CustomerDto> PostCustomer(CustomerDto customerDto)
         {
-            return _context.Customers.Any(e => e.Id == id);
+            var customer = CustomerDto.DtoToEntity(customerDto);
+            var customerAdded = _customerService.Create(customer);
+
+            return new CustomerDto(customerAdded);
+        }
+
+        // DELETE: api/Customer/5
+        [HttpDelete("{id}")]
+        public IActionResult DeleteCustomer(int id)
+        {
+            _customerService.Delete(id);
+
+            return NoContent();
         }
     }
 }

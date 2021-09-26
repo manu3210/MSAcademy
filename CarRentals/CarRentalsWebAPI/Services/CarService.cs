@@ -1,19 +1,19 @@
-﻿using CarRentalsWebAPI.Models;
-using CarRentalsWebAPI.Repository;
+﻿using CarRentalsWebAPI.Interfaces;
+using Models;
 using System.Collections.Generic;
 
 namespace CarRentalsWebAPI.Services
 {
-    public class BrandService : IBrandService
+    public class CarService : ICarService
     {
-        private readonly IBrandRepository _repository;
+        private readonly ICarRepository _repository;
 
-        public BrandService(IBrandRepository repository)
+        public CarService(ICarRepository repository)
         {
             _repository = repository;
         }
 
-        public Brand Create(Brand brand)
+        public Car Create(Car brand)
         {
             var newBrand = _repository.Create(brand);
 
@@ -25,17 +25,17 @@ namespace CarRentalsWebAPI.Services
             _repository.Delete(id);
         }
 
-        public Brand Get(int id)
+        public Car Get(int id)
         {
             return _repository.Get(id);
         }
 
-        public List<Brand> GetAll()
+        public List<Car> GetAll()
         {
             return _repository.GetAll();
         }
 
-        public Brand Update(int id, Brand element)
+        public Car Update(int id, Car element)
         {
             return _repository.Update(id, element);
         }

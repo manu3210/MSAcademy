@@ -1,10 +1,8 @@
 ﻿using CarRentals.Models;
 using CarRentalsWebAPI.DTO;
-using CarRentalsWebAPI.Models;
+using CarRentalsWebAPI.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CarRentalsWebAPI.Controllers
@@ -13,25 +11,32 @@ namespace CarRentalsWebAPI.Controllers
     [ApiController]
     public class RentalsController : ControllerBase
     {
-        private readonly CarRentalsContext _context;
+        private readonly IRentalService _rentalService;
 
-        public RentalsController(CarRentalsContext context)
+        public RentalsController(IRentalService rentalService)
         {
-            _context = context;
+            _rentalService = rentalService;
         }
 
-        // GET: api/Rentals
+        // GET: api/Customer
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<RentalDto>>> GetRentals()
+        public ActionResult<List<RentalDto>> GetRentals()
         {
-            return await _context.Rentals.Select(x => new RentalDto(x)).ToListAsync();
+            List<RentalDto> list = new List<RentalDto>();
+
+            foreach (Rental item in _rentalService.GetAll())
+            {
+                list.Add(new RentalDto(item));
+            }
+
+            return list;
         }
 
-        // GET: api/Rentals/5
+        // GET: api/Customer/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<RentalDto>> GetRental(int id)
+        public ActionResult<RentalDto> GetRental(int id)
         {
-            var rental = await _context.Rentals.FindAsync(id);
+            var rental = _rentalService.Get(id);
 
             if (rental == null)
             {
@@ -41,58 +46,37 @@ namespace CarRentalsWebAPI.Controllers
             return new RentalDto(rental);
         }
 
-        // PUT: api/Rentals/5
+        // PUT: api/Customer/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRental(int id, RentalDto rental)
+        public IActionResult PutRental(int id, RentalDto rental)
         {
-            var rentalModel = await _context.Rentals.FindAsync(id);
+            var toUpdate = _rentalService.Update(id, RentalDto.DtoToEntity(rental));
 
-            if (rentalModel == null)
-            {
-                return null;
-            }
-
-            rentalModel.Id = rental.Id;
-            rentalModel.Beginning = rental.Beginning;
-            rentalModel.End = rental.End;
-            rentalModel.Price = rental.Price;
-            rentalModel.Customer = CustomerDto.DtoToEntity(rental.Customer);
-            rentalModel.Car = CarDto.DtoToEntity(rental.Car);
-
-            await _context.SaveChangesAsync();
-            
-            return NoContent();
-        }
-
-        // POST: api/Rentals
-        [HttpPost]
-        public async Task<ActionResult<Rental>> PostRental(RentalDto rental)
-        {
-            _context.Rentals.Add(RentalDto.DtoToEntity(rental));
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetRental", new { id = rental.Id }, rental);
-        }
-
-        // DELETE: api/Rentals/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRental(int id)
-        {
-            var rental = await _context.Rentals.FindAsync(id);
-            if (rental == null)
+            if (toUpdate == null)
             {
                 return NotFound();
             }
 
-            _context.Rentals.Remove(rental);
-            await _context.SaveChangesAsync();
-
             return NoContent();
         }
 
-        private bool RentalExists(int id)
+        // POST: api/Customer
+        [HttpPost]
+        public ActionResult<RentalDto> PostRental(RentalDto rentalDto)
         {
-            return _context.Rentals.Any(e => e.Id == id);
+            var rental = RentalDto.DtoToEntity(rentalDto);
+            var rentalAdded = _rentalService.Create(rental);
+
+            return new RentalDto(rentalAdded);
+        }
+
+        // DELETE: api/Customer/5
+        [HttpDelete("{id}")]
+        public IActionResult DeleteRental(int id)
+        {
+            _rentalService.Delete(id);
+
+            return NoContent();
         }
     }
 }

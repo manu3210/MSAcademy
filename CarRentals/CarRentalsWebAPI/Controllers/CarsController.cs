@@ -1,10 +1,8 @@
 ﻿using CarRentalsWebAPI.DTO;
-using CarRentalsWebAPI.Models;
+using CarRentalsWebAPI.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Models;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CarRentalsWebAPI.Controllers
@@ -13,25 +11,32 @@ namespace CarRentalsWebAPI.Controllers
     [ApiController]
     public class CarsController : ControllerBase
     {
-        private readonly CarRentalsContext _context;
+        private readonly ICarService _carService;
 
-        public CarsController(CarRentalsContext context)
+        public CarsController(ICarService carService)
         {
-            _context = context;
+            _carService = carService;
         }
 
         // GET: api/Cars
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CarDto>>> GetCars()
+        public ActionResult<List<CarDto>> GetCars()
         {
-            return await _context.Cars.Select(x => new CarDto(x)).ToListAsync();
+            List<CarDto> list = new List<CarDto>();
+
+            foreach (Car item in _carService.GetAll())
+            {
+                list.Add(new CarDto(item));
+            }
+
+            return list;
         }
 
         // GET: api/Cars/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<CarDto>> GetCar(int id)
+        public ActionResult<CarDto> GetCar(int id)
         {
-            var car = await _context.Cars.FindAsync(id);
+            var car = _carService.Get(id);
 
             if (car == null)
             {
@@ -43,57 +48,35 @@ namespace CarRentalsWebAPI.Controllers
 
         // PUT: api/Cars/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCar(int id, CarDto carDto)
+        public IActionResult PutCar(int id, CarDto car)
         {
-            var carModel = await _context.Cars.FindAsync(id);
+            var toUpdate = _carService.Update(id, CarDto.DtoToEntity(car));
 
-            if (carModel == null)
+            if (toUpdate == null)
             {
                 return NotFound();
             }
-
-            carModel.Id = carDto.Id;
-            carModel.Doors = carDto.Doors;
-            carModel.Brand = BrandDto.DtoToEntity(carDto.Brand);
-            carModel.Color = carDto.Color;
-            carModel.IsRented = carDto.IsRented;
-            carModel.Transmition = carDto.Transmition;
-            carModel.Model = carDto.Model;
-            
-            await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
         // POST: api/Cars
         [HttpPost]
-        public async Task<ActionResult<Car>> PostCar(CarDto car)
+        public ActionResult<CarDto> PostCar(CarDto carDto)
         {
-            _context.Cars.Add(CarDto.DtoToEntity(car));
-            await _context.SaveChangesAsync();
+            var car = CarDto.DtoToEntity(carDto);
+            var carAdded = _carService.Create(car);
 
-            return CreatedAtAction("GetCar", new { id = car.Id }, car);
+            return new CarDto(carAdded);
         }
 
         // DELETE: api/Cars/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCar(int id)
+        public IActionResult DeleteCar(int id)
         {
-            var car = await _context.Cars.FindAsync(id);
-            if (car == null)
-            {
-                return NotFound();
-            }
-
-            _context.Cars.Remove(car);
-            await _context.SaveChangesAsync();
+            _carService.Delete(id);
 
             return NoContent();
-        }
-
-        private bool CarExists(int id)
-        {
-            return _context.Cars.Any(e => e.Id == id);
         }
     }
 }

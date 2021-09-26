@@ -2,9 +2,7 @@
 using CarRentalsWebAPI.Models;
 using CarRentalsWebAPI.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CarRentalsWebAPI.Controllers
@@ -19,14 +17,14 @@ namespace CarRentalsWebAPI.Controllers
         {
             _brandService = brandService;
         }
-        
+
         // GET: api/Brands
         [HttpGet]
         public ActionResult<List<BrandDto>> GetBrands()
         {
             List<BrandDto> list = new List<BrandDto>();
 
-            foreach (Brand item in _brandService.GetAll()) 
+            foreach (Brand item in _brandService.GetAll())
             {
                 list.Add(new BrandDto(item));
             }
@@ -61,7 +59,7 @@ namespace CarRentalsWebAPI.Controllers
 
             return NoContent();
         }
-        
+
         // POST: api/Brands
         [HttpPost]
         public ActionResult<BrandDto> PostBrand(BrandDto brandDto)
@@ -74,7 +72,7 @@ namespace CarRentalsWebAPI.Controllers
 
         // DELETE: api/Brands/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBrand(int id)
+        public IActionResult DeleteBrand(int id)
         {
             _brandService.Delete(id);
 

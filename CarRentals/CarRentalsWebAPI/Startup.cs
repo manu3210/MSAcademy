@@ -1,22 +1,14 @@
-using CarRentals.Interfaces;
-using CarRentalsWebAPI.Controllers;
+using CarRentalsWebAPI.Interfaces;
 using CarRentalsWebAPI.Models;
 using CarRentalsWebAPI.Repository;
 using CarRentalsWebAPI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CarRentalsWebAPI
 {
@@ -33,8 +25,19 @@ namespace CarRentalsWebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<CarRentalsContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CarRentalsDB")));
+
             services.AddScoped<IBrandRepository, BrandRepository>();
             services.AddScoped<IBrandService, BrandService>();
+
+            services.AddScoped<ICarRepository, CarRepository>();
+            services.AddScoped<ICarService, CarService>();
+
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<ICustomerService, CustomerService>();
+
+            services.AddScoped<IRentalRepository, RentalRepository>();
+            services.AddScoped<IRentalService, RentalService>();
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
