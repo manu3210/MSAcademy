@@ -13,9 +13,19 @@ namespace CarRentalsWebAPI.Services
             _repository = repository;
         }
 
-        public Customer Create(Customer Customer)
+        public Customer Create(Customer customer)
         {
-            var newCustomer = _repository.Create(Customer);
+            var list = _repository.GetAll();
+
+            foreach (Customer item in list)
+            {
+                if (item.Dni.Equals(customer.Dni))
+                {
+                    return null;
+                }
+            }
+
+            var newCustomer = _repository.Create(customer);
 
             return newCustomer;
         }

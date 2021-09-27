@@ -28,7 +28,7 @@ namespace CarRentalsWebAPI.Controllers
                 list.Add(new BrandDto(item));
             }
 
-            return list;
+            return Ok(list);
         }
 
         // GET: api/Brands/5
@@ -42,7 +42,7 @@ namespace CarRentalsWebAPI.Controllers
                 return NotFound();
             }
 
-            return new BrandDto(brand);
+            return Ok(new BrandDto(brand));
         }
 
         // PUT: api/Brands/5
@@ -68,10 +68,10 @@ namespace CarRentalsWebAPI.Controllers
 
             if(brandAdded == null)
             {
-                return null;
+                return BadRequest();
             }
 
-            return new BrandDto(brandAdded);
+            return Ok(new BrandDto(brandAdded));
         }
 
         // DELETE: api/Brands/5

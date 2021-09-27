@@ -3,7 +3,6 @@ using CarRentalsWebAPI.DTO;
 using CarRentalsWebAPI.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace CarRentalsWebAPI.Controllers
 {
@@ -29,7 +28,7 @@ namespace CarRentalsWebAPI.Controllers
                 list.Add(new RentalDto(item));
             }
 
-            return list;
+            return Ok(list);
         }
 
         // GET: api/Customer/5
@@ -43,7 +42,7 @@ namespace CarRentalsWebAPI.Controllers
                 return NotFound();
             }
 
-            return new RentalDto(rental);
+            return Ok(new RentalDto(rental));
         }
 
         // PUT: api/Customer/5
@@ -67,7 +66,12 @@ namespace CarRentalsWebAPI.Controllers
             var rental = RentalDto.DtoToEntity(rentalDto);
             var rentalAdded = _rentalService.Create(rental);
 
-            return new RentalDto(rentalAdded);
+            if (rentalAdded == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(new RentalDto(rentalAdded));
         }
 
         // DELETE: api/Customer/5

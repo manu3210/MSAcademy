@@ -7,7 +7,7 @@ namespace CarRentalsWebAPI.Repository
 {
     public abstract class Repository<T> : IDataProcessing<T> where T : BaseModel
     {
-        private readonly CarRentalsContext _context;
+        protected readonly CarRentalsContext _context;
 
         public Repository(CarRentalsContext context)
         {
@@ -30,12 +30,12 @@ namespace CarRentalsWebAPI.Repository
             _context.SaveChanges();
         }
 
-        public T Get(int id)
+        public virtual T Get(int id)
         {
             return _context.Set<T>().Find(id);
         }
 
-        public List<T> GetAll()
+        public virtual List<T> GetAll()
         {
             return _context.Set<T>().ToList();
         }

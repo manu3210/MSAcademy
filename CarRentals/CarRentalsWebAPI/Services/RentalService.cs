@@ -15,9 +15,14 @@ namespace CarRentalsWebAPI.Services
 
         public Rental Create(Rental rental)
         {
-            var newRental = _repository.Create(rental);
-
-            return newRental;
+            if(validateRental(rental))
+            {
+                return _repository.Create(rental);
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public void Delete(int id)
@@ -37,7 +42,29 @@ namespace CarRentalsWebAPI.Services
 
         public Rental Update(int id, Rental element)
         {
-            return _repository.Update(id, element);
+            if(validateRental(element))
+            {
+                return _repository.Update(id, element);
+            }
+            else
+            {
+                return null;
+            }
+            
+        }
+
+        private bool validateRental(Rental rental)
+        {
+            
+            if (rental.Car != null && rental.Customer != null && rental.End.Subtract(rental.Beginning).Days > 0)
+            {
+                if (rental.Car.IsRented == false)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }
