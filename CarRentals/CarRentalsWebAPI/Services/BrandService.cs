@@ -15,6 +15,16 @@ namespace CarRentalsWebAPI.Services
 
         public Brand Create(Brand brand)
         {
+            var list = _repository.GetAll();
+
+            foreach(Brand item in list)
+            {
+                if(item.BrandName.Equals(brand.BrandName))
+                {
+                    return null;
+                }
+            }
+
             var newBrand = _repository.Create(brand);
 
             return newBrand;

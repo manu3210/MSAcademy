@@ -3,7 +3,6 @@ using CarRentalsWebAPI.Models;
 using CarRentalsWebAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace CarRentalsWebAPI.Controllers
 {
@@ -66,6 +65,11 @@ namespace CarRentalsWebAPI.Controllers
         {
             var brand = BrandDto.DtoToEntity(brandDto);
             var brandAdded = _brandService.Create(brand);
+
+            if(brandAdded == null)
+            {
+                return null;
+            }
 
             return new BrandDto(brandAdded);
         }

@@ -13,11 +13,11 @@ namespace CarRentalsWebAPI.Services
             _repository = repository;
         }
 
-        public Rental Create(Rental brand)
+        public Rental Create(Rental rental)
         {
-            var newBrand = _repository.Create(brand);
+            var newRental = _repository.Create(rental);
 
-            return newBrand;
+            return newRental;
         }
 
         public void Delete(int id)
