@@ -1,5 +1,6 @@
 ﻿using CarRentalsWebAPI.DTO;
 using CarRentalsWebAPI.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using System.Collections.Generic;
@@ -19,9 +20,10 @@ namespace CarRentalsWebAPI.Controllers
 
         // GET: api/Cars
         [HttpGet]
-        public ActionResult<List<CarDto>> GetCars()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CarDto>))]
+        public IActionResult GetCars()
         {
-            List<CarDto> list = new List<CarDto>();
+            var list = new List<CarDto>();
 
             foreach (Car item in _carService.GetAll())
             {
@@ -33,7 +35,9 @@ namespace CarRentalsWebAPI.Controllers
 
         // GET: api/Cars/5
         [HttpGet("{id}")]
-        public ActionResult<CarDto> GetCar(int id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CarDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult GetCar(int id)
         {
             var car = _carService.Get(id);
 
@@ -47,6 +51,8 @@ namespace CarRentalsWebAPI.Controllers
 
         // PUT: api/Cars/5
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CarDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult PutCar(int id, CarDto car)
         {
             var toUpdate = _carService.Update(id, CarDto.DtoToEntity(car));
@@ -56,12 +62,14 @@ namespace CarRentalsWebAPI.Controllers
                 return NotFound();
             }
 
-            return NoContent();
+            return Ok(car);
         }
 
         // POST: api/Cars
         [HttpPost]
-        public ActionResult<CarDto> PostCar(CarDto carDto)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CarDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult PostCar(CarDto carDto)
         {
             var car = CarDto.DtoToEntity(carDto);
             var carAdded = _carService.Create(car);
@@ -76,6 +84,7 @@ namespace CarRentalsWebAPI.Controllers
 
         // DELETE: api/Cars/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public IActionResult DeleteCar(int id)
         {
             _carService.Delete(id);

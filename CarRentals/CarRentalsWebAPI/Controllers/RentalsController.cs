@@ -1,6 +1,7 @@
 ﻿using CarRentals.Models;
 using CarRentalsWebAPI.DTO;
 using CarRentalsWebAPI.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -19,9 +20,10 @@ namespace CarRentalsWebAPI.Controllers
 
         // GET: api/Customer
         [HttpGet]
-        public ActionResult<List<RentalDto>> GetRentals()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<RentalDto>))]
+        public IActionResult GetRentals()
         {
-            List<RentalDto> list = new List<RentalDto>();
+            var list = new List<RentalDto>();
 
             foreach (Rental item in _rentalService.GetAll())
             {
@@ -33,7 +35,9 @@ namespace CarRentalsWebAPI.Controllers
 
         // GET: api/Customer/5
         [HttpGet("{id}")]
-        public ActionResult<RentalDto> GetRental(int id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RentalDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult GetRental(int id)
         {
             var rental = _rentalService.Get(id);
 
@@ -47,6 +51,8 @@ namespace CarRentalsWebAPI.Controllers
 
         // PUT: api/Customer/5
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RentalDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult PutRental(int id, RentalDto rental)
         {
             var toUpdate = _rentalService.Update(id, RentalDto.DtoToEntity(rental));
@@ -56,12 +62,14 @@ namespace CarRentalsWebAPI.Controllers
                 return NotFound();
             }
 
-            return NoContent();
+            return Ok(rental);
         }
 
         // POST: api/Customer
         [HttpPost]
-        public ActionResult<RentalDto> PostRental(RentalDto rentalDto)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RentalDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult PostRental(RentalDto rentalDto)
         {
             var rental = RentalDto.DtoToEntity(rentalDto);
             var rentalAdded = _rentalService.Create(rental);
@@ -76,6 +84,7 @@ namespace CarRentalsWebAPI.Controllers
 
         // DELETE: api/Customer/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public IActionResult DeleteRental(int id)
         {
             _rentalService.Delete(id);

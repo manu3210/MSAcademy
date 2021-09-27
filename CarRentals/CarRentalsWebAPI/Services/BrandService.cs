@@ -1,4 +1,5 @@
-﻿using CarRentalsWebAPI.Models;
+﻿using CarRentalsWebAPI.Interfaces;
+using CarRentalsWebAPI.Models;
 using CarRentalsWebAPI.Repository;
 using System.Collections.Generic;
 

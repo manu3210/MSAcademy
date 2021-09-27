@@ -1,9 +1,8 @@
-﻿using CarRentals.Interfaces;
-using CarRentals.Models;
+﻿using CarRentals.Models;
 
 namespace CarRentalsWebAPI.Interfaces
 {
-    public interface IRentalService : IDataProcessing<Rental>
+    public interface IRentalService : IService<Rental>
     {
     }
 }

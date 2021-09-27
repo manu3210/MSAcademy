@@ -1,6 +1,7 @@
 ﻿using CarRentalsWebAPI.DTO;
+using CarRentalsWebAPI.Interfaces;
 using CarRentalsWebAPI.Models;
-using CarRentalsWebAPI.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -19,9 +20,10 @@ namespace CarRentalsWebAPI.Controllers
 
         // GET: api/Brands
         [HttpGet]
-        public ActionResult<List<BrandDto>> GetBrands()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<BrandDto>))]
+        public IActionResult GetBrands()
         {
-            List<BrandDto> list = new List<BrandDto>();
+            var list = new List<BrandDto>();
 
             foreach (Brand item in _brandService.GetAll())
             {
@@ -33,7 +35,9 @@ namespace CarRentalsWebAPI.Controllers
 
         // GET: api/Brands/5
         [HttpGet("{id}")]
-        public ActionResult<BrandDto> GetBrand(int id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BrandDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult GetBrand(int id)
         {
             var brand = _brandService.Get(id);
 
@@ -47,6 +51,8 @@ namespace CarRentalsWebAPI.Controllers
 
         // PUT: api/Brands/5
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BrandDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult PutBrand(int id, BrandDto brand)
         {
             var toUpdate = _brandService.Update(id, BrandDto.DtoToEntity(brand));
@@ -56,17 +62,19 @@ namespace CarRentalsWebAPI.Controllers
                 return NotFound();
             }
 
-            return NoContent();
+            return Ok(brand);
         }
 
         // POST: api/Brands
         [HttpPost]
-        public ActionResult<BrandDto> PostBrand(BrandDto brandDto)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BrandDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult PostBrand(BrandDto brandDto)
         {
             var brand = BrandDto.DtoToEntity(brandDto);
             var brandAdded = _brandService.Create(brand);
 
-            if(brandAdded == null)
+            if (brandAdded == null)
             {
                 return BadRequest();
             }
@@ -76,6 +84,7 @@ namespace CarRentalsWebAPI.Controllers
 
         // DELETE: api/Brands/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public IActionResult DeleteBrand(int id)
         {
             _brandService.Delete(id);

@@ -1,6 +1,7 @@
 ﻿using CarRentals.Models;
 using CarRentalsWebAPI.DTO;
 using CarRentalsWebAPI.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -19,9 +20,10 @@ namespace CarRentalsWebAPI.Controllers
 
         // GET: api/Customer
         [HttpGet]
-        public ActionResult<List<CustomerDto>> GetCustomers()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CustomerDto>))]
+        public IActionResult GetCustomers()
         {
-            List<CustomerDto> list = new List<CustomerDto>();
+            var list = new List<CustomerDto>();
 
             foreach (Customer item in _customerService.GetAll())
             {
@@ -33,7 +35,9 @@ namespace CarRentalsWebAPI.Controllers
 
         // GET: api/Customer/5
         [HttpGet("{id}")]
-        public ActionResult<CustomerDto> GetCustomer(int id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CustomerDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult GetCustomer(int id)
         {
             var customer = _customerService.Get(id);
 
@@ -47,6 +51,8 @@ namespace CarRentalsWebAPI.Controllers
 
         // PUT: api/Customer/5
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CustomerDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult PutCustomer(int id, CustomerDto customer)
         {
             var toUpdate = _customerService.Update(id, CustomerDto.DtoToEntity(customer));
@@ -56,12 +62,14 @@ namespace CarRentalsWebAPI.Controllers
                 return NotFound();
             }
 
-            return NoContent();
+            return Ok(customer);
         }
 
         // POST: api/Customer
         [HttpPost]
-        public ActionResult<CustomerDto> PostCustomer(CustomerDto customerDto)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CustomerDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult PostCustomer(CustomerDto customerDto)
         {
             var customer = CustomerDto.DtoToEntity(customerDto);
             var customerAdded = _customerService.Create(customer);
@@ -76,6 +84,7 @@ namespace CarRentalsWebAPI.Controllers
 
         // DELETE: api/Customer/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public IActionResult DeleteCustomer(int id)
         {
             _customerService.Delete(id);

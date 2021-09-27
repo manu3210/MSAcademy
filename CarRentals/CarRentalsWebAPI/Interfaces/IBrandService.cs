@@ -1,9 +1,8 @@
-﻿using CarRentals.Interfaces;
-using CarRentalsWebAPI.Models;
+﻿using CarRentalsWebAPI.Models;
 
-namespace CarRentalsWebAPI.Services
+namespace CarRentalsWebAPI.Interfaces
 {
-    public interface IBrandService : IDataProcessing<Brand>
+    public interface IBrandService : IService<Brand>
     {
     }
 }
