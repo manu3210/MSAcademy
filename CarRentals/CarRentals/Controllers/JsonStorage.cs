@@ -24,11 +24,12 @@ namespace CarRentals.Controllers
             List = ReadJson();
         }
 
-        public void Create(T element)
+        public T Create(T element)
         {
             if (element != null)
                 List.Add(element);
             SaveChanges(List);
+            return element;
         }
 
         public T Get(int id)
