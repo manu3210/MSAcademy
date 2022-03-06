@@ -1,53 +1,27 @@
 ﻿using CarRentals.Models;
 using CarRentalsWebAPI.Interfaces;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CarRentalsWebAPI.Services
 {
-    public class CustomerService : ICustomerService
+    public class CustomerService : Service<Customer>, ICustomerService
     {
-        private readonly ICustomerRepository _repository;
+        public CustomerService(IDataProcessing<Customer> repository) : base(repository) { }
 
-        public CustomerService(ICustomerRepository repository)
+        public async override Task<Customer> CreateAsync(Customer element)
         {
-            _repository = repository;
-        }
-
-        public Customer Create(Customer customer)
-        {
-            var list = _repository.GetAll();
+            var list = GetAll();
 
             foreach (Customer item in list)
             {
-                if (item.Dni.Equals(customer.Dni))
+                if (item.Dni.Equals(element.Dni))
                 {
                     return null;
                 }
             }
 
-            var newCustomer = _repository.Create(customer);
-
-            return newCustomer;
-        }
-
-        public void Delete(int id)
-        {
-            _repository.Delete(id);
-        }
-
-        public Customer Get(int id)
-        {
-            return _repository.Get(id);
-        }
-
-        public List<Customer> GetAll()
-        {
-            return _repository.GetAll();
-        }
-
-        public Customer Update(int id, Customer element)
-        {
-            return _repository.Update(id, element);
+            return await base.CreateAsync(element);
         }
     }
 }

@@ -1,54 +1,26 @@
 ﻿using CarRentalsWebAPI.Interfaces;
 using CarRentalsWebAPI.Models;
-using CarRentalsWebAPI.Repository;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CarRentalsWebAPI.Services
 {
-    public class BrandService : IBrandService
+    public class BrandService : Service<Brand>, IBrandService
     {
-        private readonly IBrandRepository _repository;
+        public BrandService(IDataProcessing<Brand> Repository) : base(Repository) { }
 
-        public BrandService(IBrandRepository repository)
+        public override async Task<Brand> CreateAsync(Brand element)
         {
-            _repository = repository;
-        }
+            var list = GetAll();
 
-        public Brand Create(Brand brand)
-        {
-            var list = _repository.GetAll();
-
-            foreach(Brand item in list)
+            foreach (Brand item in list)
             {
-                if(item.BrandName.Equals(brand.BrandName))
+                if (item.BrandName.Equals(element.BrandName))
                 {
                     return null;
                 }
             }
 
-            var newBrand = _repository.Create(brand);
-
-            return newBrand;
-        }
-
-        public void Delete(int id)
-        {
-            _repository.Delete(id);
-        }
-
-        public Brand Get(int id)
-        {
-            return _repository.Get(id);
-        }
-
-        public List<Brand> GetAll()
-        {
-            return _repository.GetAll();
-        }
-
-        public Brand Update(int id, Brand element)
-        {
-            return _repository.Update(id, element);
+            return await base.CreateAsync(element);
         }
     }
 }

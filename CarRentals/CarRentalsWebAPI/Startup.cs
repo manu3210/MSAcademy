@@ -1,3 +1,4 @@
+using CarRentals.Models;
 using CarRentalsWebAPI.Interfaces;
 using CarRentalsWebAPI.Models;
 using CarRentalsWebAPI.Repository;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Models;
 
 namespace CarRentalsWebAPI
 {
@@ -25,6 +27,8 @@ namespace CarRentalsWebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<CarRentalsContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CarRentalsDB")));
+
+            services.AddScoped(typeof(IDataProcessing<>), typeof(Repository<>));
 
             services.AddScoped<IBrandRepository, BrandRepository>();
             services.AddScoped<IBrandService, BrandService>();
