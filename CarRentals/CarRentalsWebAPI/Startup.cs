@@ -3,6 +3,8 @@ using CarRentalsWebAPI.Interfaces;
 using CarRentalsWebAPI.Models;
 using CarRentalsWebAPI.Repository;
 using CarRentalsWebAPI.Services;
+using CarRentalsWebAPI.Validations;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -65,6 +67,12 @@ namespace CarRentalsWebAPI
 
                 c.IncludeXmlComments(XmlCommentsFilePath);
             });
+
+            services.AddFluentValidation(
+                fv => fv.RegisterValidatorsFromAssemblyContaining<BrandValidator>()
+                .RegisterValidatorsFromAssemblyContaining<CarValidator>()
+                .RegisterValidatorsFromAssemblyContaining<CustomerValidator>()
+                .RegisterValidatorsFromAssemblyContaining<RentalValidator>());
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
