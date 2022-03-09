@@ -40,7 +40,7 @@ namespace CarRentalsWebAPI.IntegrationTests.Controllers
             // Act
 
             var statusCode = await _client.GetAsync("api/Customers/1");
-            var result = await _client.GetFromJsonAsync<CustomerDto>("api/Customers/10");
+            var result = await _client.GetFromJsonAsync<CustomerDto>("api/Customers/1");
 
             // Assert
 
@@ -64,9 +64,23 @@ namespace CarRentalsWebAPI.IntegrationTests.Controllers
         [Fact]
         public async Task PutCustomer_WhenTheCustomerWasSuccesfullyUpdated_ReturnsOk()
         {
+            // Arrange
+
+            var customer = new CustomerDto
+            {
+                Adress = "Adress4",
+                City = "City4",
+                Dni = "13236546",
+                FirstName = "Name1",
+                LastModification = System.DateTime.Now,
+                LastName = "LastName4",
+                Phone = "321354",
+                Province = "Province1",
+                ZipCode = 2222
+            };
             // Act
 
-            var result = await _client.PutAsJsonAsync("api/Customers/2", new CustomerDto { Adress = "NewAdress" });
+            var result = await _client.PutAsJsonAsync("api/Customers/2", customer);
 
             // Assert
 
@@ -77,13 +91,17 @@ namespace CarRentalsWebAPI.IntegrationTests.Controllers
         [Fact]
         public async Task PutCustomer_WhenTheCustomerToUpdateIsNull_ReturnsNotFound()
         {
+            // Arrange
+
+            CustomerDto customer = null;
+
             // Act
 
-            var result = await _client.PutAsJsonAsync("api/Customers/100", new CustomerDto { Adress = "NewAdress" });
+            var result = await _client.PutAsJsonAsync("api/Customers/2", customer);
 
             // Assert
 
-            Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
         }
 
         [Fact]
@@ -93,15 +111,15 @@ namespace CarRentalsWebAPI.IntegrationTests.Controllers
 
             var customer = new CustomerDto
             {
-                Id = 40,
-                Adress = "Adress4",
-                City = "City4",
-                Dni = "13236546",
-                FirstName = "Name4",
+                Id = 5,
+                Adress = "Adress5",
+                City = "City5",
+                Dni = "13852046",
+                FirstName = "Name5",
                 LastModification = System.DateTime.Now,
-                LastName = "LastName4",
+                LastName = "LastName5",
                 Phone = "321354",
-                Province = "Province4",
+                Province = "Province5",
                 ZipCode = 2200
             };
 

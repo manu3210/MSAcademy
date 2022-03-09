@@ -95,6 +95,9 @@ namespace CarRentalsWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> PostCustomer(CustomerDto customerDto)
         {
+            if (customerDto == null)
+                return BadRequest();
+
             var customer = CustomerDto.DtoToEntity(customerDto);
             var customerAdded = await _customerService.CreateAsync(customer);
 
