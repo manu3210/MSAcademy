@@ -22,12 +22,12 @@ namespace CarRentalsWebAPI.IntegrationTests
 
             db.SaveChanges();
         }
-            private static List<Rental> SetRentalList()
-            {
-                return new List<Rental> {
-                    new Rental { 
-                        Id = 1, 
-                        Beginning = DateTime.Now, 
+        private static List<Rental> SetRentalList()
+        {
+            return new List<Rental> {
+                    new Rental {
+                        Id = 1,
+                        Beginning = DateTime.Now,
                         Car = new Car {
                             Id = 1,
                             Brand = new Brand { Id = 1, BrandName = "Ford" },
@@ -47,12 +47,12 @@ namespace CarRentalsWebAPI.IntegrationTests
                             Phone = "321354",
                             Province = "Province1",
                             ZipCode = 2200},
-                        End = DateTime.Now.AddDays(2), 
+                        End = DateTime.Now.AddDays(2),
                         Price = 5000 },
 
-                    new Rental { 
-                        Id = 2, 
-                        Beginning = DateTime.Now, 
+                    new Rental {
+                        Id = 2,
+                        Beginning = DateTime.Now,
                         Car = new Car {
                             Id = 2,
                             Brand = new Brand { Id = 2, BrandName = "Honda" },
@@ -72,7 +72,7 @@ namespace CarRentalsWebAPI.IntegrationTests
                             Phone = "987654",
                             Province = "Province2",
                             ZipCode = 4400},
-                        End = DateTime.Now.AddDays(3), 
+                        End = DateTime.Now.AddDays(3),
                         Price = 9000 },
 
                     new Rental {
@@ -99,7 +99,7 @@ namespace CarRentalsWebAPI.IntegrationTests
                             ZipCode = 6600},
                         End = DateTime.Now.AddDays(3),
                         Price = 9000 }};
-            }
+        }
     }
-    
+
 }

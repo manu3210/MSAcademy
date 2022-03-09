@@ -6,7 +6,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace CarRentalsWebAPI.IntegrationTests
+namespace CarRentalsWebAPI.IntegrationTests.Controllers
 {
     public class BrandControllerTests : IClassFixture<TestingAppFactory<Program>>
     {

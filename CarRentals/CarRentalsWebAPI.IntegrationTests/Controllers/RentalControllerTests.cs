@@ -1,5 +1,4 @@
 ﻿using CarRentalsWebAPI.DTO;
-using CarRentalsWebAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -107,7 +106,7 @@ namespace CarRentalsWebAPI.IntegrationTests.Controllers
         public async Task PostRental_WhenRentalWasSuccesfullyAddedToTheDB_ReturnsOk()
         {
             // Arrange
-            
+
             var rental = new RentalDto
             {
                 Beginning = DateTime.Now,
@@ -137,7 +136,7 @@ namespace CarRentalsWebAPI.IntegrationTests.Controllers
                 End = DateTime.Now.AddDays(2),
                 Price = 5000
             };
-            
+
 
             // Act
             var result = await _client.PostAsJsonAsync<RentalDto>("api/Rentals", rental);
