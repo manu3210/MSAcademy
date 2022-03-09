@@ -1,4 +1,4 @@
-using CarRentalsWebAPI.DTO;
+﻿using CarRentalsWebAPI.DTO;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -24,13 +24,13 @@ namespace CarRentalsWebAPI.IntegrationTests
         {
             // Act
 
-           //var statusCode = await _client.GetAsync("api/Brands/");
+            var statusCode = await _client.GetAsync("api/Brands/");
             var result = await _client.GetFromJsonAsync<List<BrandDto>>("api/Brands/");
 
             // Assert
 
-            //statusCode.EnsureSuccessStatusCode();
-           // Assert.Equal(HttpStatusCode.OK, statusCode.StatusCode);
+            statusCode.EnsureSuccessStatusCode();
+            Assert.Equal(HttpStatusCode.OK, statusCode.StatusCode);
             Assert.NotNull(result);
         }
 
@@ -95,7 +95,7 @@ namespace CarRentalsWebAPI.IntegrationTests
         {
             // Act
 
-            var result = await _client.PutAsJsonAsync("api/Brands/100", new BrandDto {Id = 100, BrandName = "brand"});
+            var result = await _client.PutAsJsonAsync("api/Brands/100", new BrandDto { BrandName = "brand" });
 
             // Assert
 
@@ -107,7 +107,7 @@ namespace CarRentalsWebAPI.IntegrationTests
         {
             // Act
 
-            var result = await _client.PostAsJsonAsync<BrandDto>("api/Brands", new BrandDto {Id = 4, BrandName = "Renault"});
+            var result = await _client.PostAsJsonAsync<BrandDto>("api/Brands", new BrandDto { BrandName = "Renault" });
 
             // Assert
 
@@ -145,4 +145,5 @@ namespace CarRentalsWebAPI.IntegrationTests
 
     }
 }
+
 

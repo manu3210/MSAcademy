@@ -1,14 +1,11 @@
 ﻿using CarRentalsWebAPI.DTO;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-/*
+
 namespace CarRentalsWebAPI.IntegrationTests.Controllers
 {
     public class CustomerControllerTests : IClassFixture<TestingAppFactory<Program>>
@@ -42,7 +39,7 @@ namespace CarRentalsWebAPI.IntegrationTests.Controllers
         {
             // Act
 
-            var statusCode = await _client.GetAsync("api/Customers/10");
+            var statusCode = await _client.GetAsync("api/Customers/1");
             var result = await _client.GetFromJsonAsync<CustomerDto>("api/Customers/10");
 
             // Assert
@@ -69,7 +66,7 @@ namespace CarRentalsWebAPI.IntegrationTests.Controllers
         {
             // Act
 
-            var result = await _client.PutAsJsonAsync("api/Customers/20", new CustomerDto { Adress = "NewAdress" });
+            var result = await _client.PutAsJsonAsync("api/Customers/2", new CustomerDto { Adress = "NewAdress" });
 
             // Assert
 
@@ -139,11 +136,11 @@ namespace CarRentalsWebAPI.IntegrationTests.Controllers
         {
             // Act
 
-            var result = await _client.DeleteAsync("api/Customers/30");
+            var result = await _client.DeleteAsync("api/Customers/3");
 
             // Assert
 
             Assert.Equal(HttpStatusCode.NoContent, result.StatusCode);
         }
     }
-}*/
+}

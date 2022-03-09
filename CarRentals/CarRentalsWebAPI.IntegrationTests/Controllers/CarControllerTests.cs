@@ -1,36 +1,23 @@
 ﻿using CarRentalsWebAPI.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using CarRentalsWebAPI.Models;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-/*
+using System.Collections.Generic;
+
 namespace CarRentalsWebAPI.IntegrationTests.Controllers
 {
     public class CarControllerTests : IClassFixture<TestingAppFactory<Program>>
     {
         private readonly TestingAppFactory<Program> _factory;
         private readonly HttpClient _client;
-        private readonly CarDto _car;
 
         public CarControllerTests(TestingAppFactory<Program> factory)
         {
             _factory = factory;
             _client = factory.CreateClient();
-
-            _car = new CarDto
-            {
-                Brand = new BrandDto { Id = 4, BrandName = "Chevrolet" },
-                Color = "Blue",
-                Model = "Onix",
-                Doors = 4,
-                IsRented = false,
-                Transmition = CarRentals.Enum.Transmition.Manual
-            };
         }
 
         [Fact]
@@ -38,12 +25,14 @@ namespace CarRentalsWebAPI.IntegrationTests.Controllers
         {
             // Act
 
-            var result = await _client.GetAsync("api/Cars/");
+            var status = await _client.GetAsync("api/Cars");
+            var result = await _client.GetFromJsonAsync<List<CarDto>>("api/Cars");
 
             // Assert
 
-            result.EnsureSuccessStatusCode();
-            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+            status.EnsureSuccessStatusCode();
+            Assert.Equal(HttpStatusCode.OK, status.StatusCode);
+            Assert.NotNull(result);
         }
 
         [Fact]
@@ -51,12 +40,14 @@ namespace CarRentalsWebAPI.IntegrationTests.Controllers
         {
             // Act
 
-            var result = await _client.GetAsync("api/Cars/1");
+            var status = await _client.GetAsync("api/Cars/1");
+            var result = await _client.GetFromJsonAsync<CarDto>("api/Cars/1");
 
             // Assert
 
-            result.EnsureSuccessStatusCode();
-            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+            status.EnsureSuccessStatusCode();
+            Assert.Equal(HttpStatusCode.OK, status.StatusCode);
+            Assert.NotNull(result);
         }
 
         [Fact]
@@ -74,9 +65,21 @@ namespace CarRentalsWebAPI.IntegrationTests.Controllers
         [Fact]
         public async Task PutCar_WhenTheCarWasSuccesfullyUpdated_ReturnsOk()
         {
+            // Arrange
+
+            var car = new CarDto
+            {
+                Brand = await _client.GetFromJsonAsync<BrandDto>("api/Brands/1"),
+                Color = "Blue",
+                Model = "Onix",
+                Doors = 4,
+                IsRented = false,
+                Transmition = CarRentals.Enum.Transmition.Manual
+            };
+
             // Act
 
-            var result = await _client.PutAsJsonAsync("api/Cars/20", _car);
+            var result = await _client.PutAsJsonAsync("api/Cars/2", car);
 
             // Assert
 
@@ -87,21 +90,37 @@ namespace CarRentalsWebAPI.IntegrationTests.Controllers
         [Fact]
         public async Task PutCar_WhenTheCarToUpdateIsNull_ReturnsNotFound()
         {
+            // Arrange
+
+            Car car = null; 
+
             // Act
 
-            var result = await _client.PutAsJsonAsync("api/Cars/100", _car);
+            var result = await _client.PutAsJsonAsync("api/Cars/100", car);
 
             // Assert
 
-            Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
         }
 
         [Fact]
         public async Task PostCar_WhenCarWasSuccesfullyAddedToTheDB_ReturnsOk()
         {
+            // Arrange
+
+            var car = new CarDto
+            {
+                Brand = new BrandDto { Id = 5, BrandName = "Chevrolet" },
+                Color = "Blue",
+                Model = "Onix",
+                Doors = 4,
+                IsRented = false,
+                Transmition = CarRentals.Enum.Transmition.Manual
+            };
+
             // Act
 
-            var result = await _client.PostAsJsonAsync("api/Cars", _car);
+            var result = await _client.PostAsJsonAsync("api/Cars", car);
 
             // Assert
 
@@ -130,13 +149,12 @@ namespace CarRentalsWebAPI.IntegrationTests.Controllers
         {
             // Act
 
-            var result = await _client.DeleteAsync("api/Cars/30");
+            var result = await _client.DeleteAsync("api/Cars/3");
 
             // Assert
 
             Assert.Equal(HttpStatusCode.NoContent, result.StatusCode);
         }
-    
+
     }
 }
-*/

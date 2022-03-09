@@ -73,6 +73,9 @@ namespace CarRentalsWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> PutCar(int id, CarDto car)
         {
+            if(car == null)
+                return BadRequest();
+
             var toUpdate = await _carService.UpdateAsync(id, CarDto.DtoToEntity(car));
 
             if (toUpdate == null)
@@ -95,6 +98,9 @@ namespace CarRentalsWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> PostCar(CarDto carDto)
         {
+            if (carDto == null)
+                return BadRequest();
+
             var car = CarDto.DtoToEntity(carDto);
             var carAdded = await _carService.CreateAsync(car);
 
