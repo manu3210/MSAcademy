@@ -1,32 +1,62 @@
-﻿using CarRentals.Models;
-using CarRentalsWebAPI.Interfaces;
+﻿using CarRentalsWebAPI.Interfaces;
+using CarRentalsWebAPI.Models;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace CarRentalsWebAPI.Services
 {
-    public class RentalService : Service<Rental>, IRentalService
+    public class RentalService : IRentalService
     {
-        public RentalService(IDataProcessing<Rental> repository) : base(repository) { }
+        private readonly IRentalRepository _repository;
 
-        public async override Task<Rental> CreateAsync(Rental element)
+        public RentalService(IRentalRepository repository)
         {
-            if (validateRental(element))
-                return await base.CreateAsync(element);
-            else
-                return null;
+            _repository = repository;
         }
 
-        public override Task<Rental> UpdateAsync(int id, Rental element)
+        public async Task<Rental> CreateAsync(Rental rental)
         {
-            if (validateRental(element))
-                return base.UpdateAsync(id, element);
+            if(validateRental(rental))
+            {
+                return await _repository.CreateAsync(rental);
+            }
             else
+            {
                 return null;
+            }
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            await _repository.DeleteAsync(id);
+        }
+
+        public async Task<Rental> GetAsync(int id)
+        {
+            return await _repository.GetAsync(id);
+        }
+
+        public List<Rental> GetAll()
+        {
+            return _repository.GetAll();
+        }
+
+        public async Task<Rental> UpdateAsync(int id, Rental element)
+        {
+            if(validateRental(element))
+            {
+                return await _repository.UpdateAsync(id, element);
+            }
+            else
+            {
+                return null;
+            }
+            
         }
 
         private bool validateRental(Rental rental)
         {
-
+            
             if (rental.Car != null && rental.Customer != null && rental.End.Subtract(rental.Beginning).Days > 0)
             {
                 if (rental.Car.IsRented == false)

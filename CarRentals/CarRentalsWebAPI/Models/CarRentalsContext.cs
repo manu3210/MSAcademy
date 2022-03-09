@@ -1,6 +1,4 @@
-﻿using CarRentals.Models;
-using Microsoft.EntityFrameworkCore;
-using Models;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace CarRentalsWebAPI.Models
 {

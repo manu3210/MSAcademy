@@ -1,20 +1,23 @@
-using CarRentals.Models;
 using CarRentalsWebAPI.Interfaces;
 using CarRentalsWebAPI.Models;
 using CarRentalsWebAPI.Repository;
 using CarRentalsWebAPI.Services;
+using CarRentalsWebAPI.Validations;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.OpenApi.Models;
-using Models;
+using System.IO;
+using System.Reflection;
 
 namespace CarRentalsWebAPI
 {
-    public class Startup
+    public partial class Startup
     {
         public Startup(IConfiguration configuration)
         {
@@ -23,12 +26,20 @@ namespace CarRentalsWebAPI
 
         public IConfiguration Configuration { get; }
 
+        private static string XmlCommentsFilePath
+        {
+            get
+            {
+                var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+                var fileName = typeof(Startup).GetTypeInfo().Assembly.GetName().Name + ".xml";
+                return Path.Combine(basePath, fileName);
+            }
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<CarRentalsContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CarRentalsDB")));
-
-            services.AddScoped(typeof(IDataProcessing<>), typeof(Repository<>));
 
             services.AddScoped<IBrandRepository, BrandRepository>();
             services.AddScoped<IBrandService, BrandService>();
@@ -45,11 +56,22 @@ namespace CarRentalsWebAPI
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "CarRentalsWebAPI", Version = "v1" });
-            });
-        }
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "CarRentalsWebAPI",
+                    Version = "v1",
+                    Description = "With this API you will be able to manage your Car rental system"
+                });
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+                c.IncludeXmlComments(XmlCommentsFilePath);
+            });
+
+            services.AddFluentValidation(
+                fv => fv.RegisterValidatorsFromAssemblyContaining<BrandValidator>()
+                .RegisterValidatorsFromAssemblyContaining<CarValidator>()
+                .RegisterValidatorsFromAssemblyContaining<CustomerValidator>()
+                .RegisterValidatorsFromAssemblyContaining<RentalValidator>());
+        }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
