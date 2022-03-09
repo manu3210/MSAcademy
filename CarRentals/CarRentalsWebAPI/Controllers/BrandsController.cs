@@ -4,6 +4,7 @@ using CarRentalsWebAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CarRentalsWebAPI.Controllers
 {
@@ -47,9 +48,9 @@ namespace CarRentalsWebAPI.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BrandDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult GetBrand(int id)
+        public async Task<IActionResult> GetBrand(int id)
         {
-            var brand = _brandService.Get(id);
+            var brand = await _brandService.GetAsync(id);
 
             if (brand == null)
             {
@@ -70,9 +71,8 @@ namespace CarRentalsWebAPI.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BrandDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult PutBrand(int id, BrandDto brand)
+        public async Task<IActionResult> PutBrand(int id, BrandDto brand)
         {
-<<<<<<< HEAD
             if (brand == null)
             {
                 return BadRequest();
@@ -83,9 +83,6 @@ namespace CarRentalsWebAPI.Controllers
             }
 
             var toUpdate = await _brandService.UpdateAsync(id, BrandDto.DtoToEntity(brand));
-=======
-            var toUpdate = _brandService.Update(id, BrandDto.DtoToEntity(brand));
->>>>>>> parent of 07f9100 (Created Generic Service Layer)
 
             if (toUpdate == null)
             {
@@ -107,7 +104,7 @@ namespace CarRentalsWebAPI.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BrandDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult PostBrand(BrandDto brandDto)
+        public async Task<IActionResult> PostBrand(BrandDto brandDto)
         {
             if (brandDto == null)
             {
@@ -115,7 +112,7 @@ namespace CarRentalsWebAPI.Controllers
             }
 
             var brand = BrandDto.DtoToEntity(brandDto);
-            var brandAdded = _brandService.Create(brand);
+            var brandAdded = await _brandService.CreateAsync(brand);
 
             if(brandAdded == null)
                 return BadRequest();
@@ -131,9 +128,9 @@ namespace CarRentalsWebAPI.Controllers
         /// <response code="204">brand was succesfully deleted</response>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public IActionResult DeleteBrand(int id)
+        public async Task<IActionResult> DeleteBrand(int id)
         {
-            _brandService.Delete(id);
+            await _brandService.DeleteAsync(id);
 
             return NoContent();
         }

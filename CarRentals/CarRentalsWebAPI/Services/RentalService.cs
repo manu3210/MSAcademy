@@ -1,12 +1,7 @@
-<<<<<<< HEAD
 ﻿using CarRentalsWebAPI.Interfaces;
 using CarRentalsWebAPI.Models;
 using System.Threading.Tasks;
-=======
-﻿using CarRentals.Models;
-using CarRentalsWebAPI.Interfaces;
 using System.Collections.Generic;
->>>>>>> parent of 07f9100 (Created Generic Service Layer)
 
 namespace CarRentalsWebAPI.Services
 {
@@ -19,11 +14,11 @@ namespace CarRentalsWebAPI.Services
             _repository = repository;
         }
 
-        public Rental Create(Rental rental)
+        public async Task<Rental> CreateAsync(Rental rental)
         {
             if(validateRental(rental))
             {
-                return _repository.Create(rental);
+                return await _repository.CreateAsync(rental);
             }
             else
             {
@@ -31,14 +26,14 @@ namespace CarRentalsWebAPI.Services
             }
         }
 
-        public void Delete(int id)
+        public async Task DeleteAsync(int id)
         {
-            _repository.Delete(id);
+            await _repository.DeleteAsync(id);
         }
 
-        public Rental Get(int id)
+        public async Task<Rental> GetAsync(int id)
         {
-            return _repository.Get(id);
+            return await _repository.GetAsync(id);
         }
 
         public List<Rental> GetAll()
@@ -46,11 +41,11 @@ namespace CarRentalsWebAPI.Services
             return _repository.GetAll();
         }
 
-        public Rental Update(int id, Rental element)
+        public async Task<Rental> UpdateAsync(int id, Rental element)
         {
             if(validateRental(element))
             {
-                return _repository.Update(id, element);
+                return await _repository.UpdateAsync(id, element);
             }
             else
             {

@@ -2,6 +2,7 @@
 using CarRentalsWebAPI.Models;
 using CarRentalsWebAPI.Repository;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CarRentalsWebAPI.Services
 {
@@ -14,7 +15,7 @@ namespace CarRentalsWebAPI.Services
             _repository = repository;
         }
 
-        public Brand Create(Brand brand)
+        public async Task<Brand> CreateAsync(Brand brand)
         {
             var list = _repository.GetAll();
 
@@ -26,19 +27,19 @@ namespace CarRentalsWebAPI.Services
                 }
             }
 
-            var newBrand = _repository.Create(brand);
+            var newBrand = await _repository.CreateAsync(brand);
 
             return newBrand;
         }
 
-        public void Delete(int id)
+        public async Task DeleteAsync(int id)
         {
-            _repository.Delete(id);
+            await _repository.DeleteAsync(id);
         }
 
-        public Brand Get(int id)
+        public async Task<Brand> GetAsync(int id)
         {
-            return _repository.Get(id);
+            return await _repository.GetAsync(id);
         }
 
         public List<Brand> GetAll()
@@ -46,9 +47,9 @@ namespace CarRentalsWebAPI.Services
             return _repository.GetAll();
         }
 
-        public Brand Update(int id, Brand element)
+        public async Task<Brand> UpdateAsync(int id, Brand element)
         {
-            return _repository.Update(id, element);
+            return await _repository.UpdateAsync(id, element);
         }
     }
 }

@@ -12,11 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.OpenApi.Models;
-<<<<<<< HEAD
 using System.IO;
 using System.Reflection;
-=======
->>>>>>> parent of 07f9100 (Created Generic Service Layer)
 
 namespace CarRentalsWebAPI
 {
