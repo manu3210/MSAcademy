@@ -1,4 +1,3 @@
-using CarRentals.Models;
 using CarRentalsWebAPI.Interfaces;
 using CarRentalsWebAPI.Models;
 using CarRentalsWebAPI.Repository;
@@ -13,13 +12,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.OpenApi.Models;
-using Models;
 using System.IO;
 using System.Reflection;
 
 namespace CarRentalsWebAPI
 {
-    public class Startup
+    public partial class Startup
     {
         public Startup(IConfiguration configuration)
         {
@@ -60,10 +58,12 @@ namespace CarRentalsWebAPI
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { 
-                    Title = "CarRentalsWebAPI", 
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "CarRentalsWebAPI",
                     Version = "v1",
-                    Description = "With this API you will be able to manage your Car rental system"});
+                    Description = "With this API you will be able to manage your Car rental system"
+                });
 
                 c.IncludeXmlComments(XmlCommentsFilePath);
             });

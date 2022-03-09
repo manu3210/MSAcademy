@@ -1,4 +1,4 @@
-﻿using CarRentals.Models;
+﻿using CarRentalsWebAPI.Models;
 using System;
 
 namespace CarRentalsWebAPI.DTO

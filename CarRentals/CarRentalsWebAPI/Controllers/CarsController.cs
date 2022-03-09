@@ -1,8 +1,8 @@
 ﻿using CarRentalsWebAPI.DTO;
 using CarRentalsWebAPI.Interfaces;
+using CarRentalsWebAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

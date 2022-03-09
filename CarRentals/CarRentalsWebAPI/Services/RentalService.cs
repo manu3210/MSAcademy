@@ -1,5 +1,5 @@
-﻿using CarRentals.Models;
-using CarRentalsWebAPI.Interfaces;
+﻿using CarRentalsWebAPI.Interfaces;
+using CarRentalsWebAPI.Models;
 using System.Threading.Tasks;
 
 namespace CarRentalsWebAPI.Services

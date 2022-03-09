@@ -73,12 +73,23 @@ namespace CarRentalsWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> PutBrand(int id, BrandDto brand)
         {
+            if (brand == null)
+            {
+                return BadRequest();
+            }
+            if(await _brandService.GetAsync(id) == null)
+            {
+                return NotFound();
+            }
+
             var toUpdate = await _brandService.UpdateAsync(id, BrandDto.DtoToEntity(brand));
 
             if (toUpdate == null)
             {
                 return NotFound();
             }
+
+            
 
             return Ok(brand);
         }
@@ -95,13 +106,16 @@ namespace CarRentalsWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> PostBrand(BrandDto brandDto)
         {
-            var brand = BrandDto.DtoToEntity(brandDto);
-            var brandAdded = await _brandService.CreateAsync(brand);
-
-            if (brandAdded == null)
+            if (brandDto == null)
             {
                 return BadRequest();
             }
+
+            var brand = BrandDto.DtoToEntity(brandDto);
+            var brandAdded = await _brandService.CreateAsync(brand);
+
+            if(brandAdded == null)
+                return BadRequest();
 
             return Ok(new BrandDto(brandAdded));
         }

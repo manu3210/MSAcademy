@@ -1,5 +1,5 @@
 ﻿using CarRentals.Enum;
-using Models;
+using CarRentalsWebAPI.Models;
 
 namespace CarRentalsWebAPI.DTO
 {
@@ -14,6 +14,7 @@ namespace CarRentalsWebAPI.DTO
         public bool IsRented { get; set; }
 
         public CarDto() { }
+
         public CarDto(Car car)
         {
             Id = car.Id;
