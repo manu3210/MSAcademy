@@ -1,4 +1,4 @@
-﻿using CarRentalsWebAPI.Interfaces;
+﻿using CarRentals.Interfaces;
 using CarRentalsWebAPI.Models;
 
 namespace CarRentalsWebAPI.Repository

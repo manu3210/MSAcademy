@@ -1,13 +1,11 @@
 ﻿using CarRentals.Interfaces;
-using CarRentalsWebAPI.Interfaces;
 using CarRentalsWebAPI.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace CarRentalsWebAPI.Repository
 {
-    public class Repository<T> : IDataProcessing<T> where T : BaseModel
+    public abstract class Repository<T> : IDataProcessing<T> where T : BaseModel
     {
         protected readonly CarRentalsContext _context;
 
@@ -16,25 +14,25 @@ namespace CarRentalsWebAPI.Repository
             _context = context;
         }
 
-        public async Task<T> CreateAsync(T element)
+        public T Create(T element)
         {
             _context.Set<T>().Add(element);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             return element;
         }
 
-        public async Task DeleteAsync(int id)
+        public void Delete(int id)
         {
-            var toDelete = await GetAsync(id);
+            var toDelete = Get(id);
 
             _context.Set<T>().Remove(toDelete);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
-        public virtual async Task<T> GetAsync(int id)
+        public virtual T Get(int id)
         {
-            return await _context.Set<T>().FindAsync(id);
+            return _context.Set<T>().Find(id);
         }
 
         public virtual List<T> GetAll()
@@ -42,9 +40,9 @@ namespace CarRentalsWebAPI.Repository
             return _context.Set<T>().ToList();
         }
 
-        public async Task<T> UpdateAsync(int id, T element)
+        public T Update(int id, T element)
         {
-            var toUpdate = await GetAsync(id);
+            var toUpdate = Get(id);
 
             if (toUpdate == null)
             {
@@ -53,12 +51,12 @@ namespace CarRentalsWebAPI.Repository
 
             UpdateData(element, toUpdate);
 
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             return toUpdate;
         }
 
-        protected virtual void UpdateData(T element, T toUpdate) { }
+        protected abstract void UpdateData(T element, T toUpdate);
 
         public bool Exist(int id)
         {

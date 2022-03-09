@@ -3,7 +3,6 @@ using CarRentalsWebAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace CarRentalsWebAPI.Repository
 {
@@ -21,9 +20,9 @@ namespace CarRentalsWebAPI.Repository
             toUpdate.Model = element.Model;
         }
 
-        public override async Task<Car> GetAsync(int id)
+        public override Car Get(int id)
         {
-            return await _context.Cars.Where(c => c.Id == id).Include(b => b.Brand).FirstOrDefaultAsync();
+            return _context.Cars.Where(c => c.Id == id).Include(b => b.Brand).FirstOrDefault();
         }
 
         public override List<Car> GetAll()

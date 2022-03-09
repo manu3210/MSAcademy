@@ -1,32 +1,67 @@
+<<<<<<< HEAD
 ﻿using CarRentalsWebAPI.Interfaces;
 using CarRentalsWebAPI.Models;
 using System.Threading.Tasks;
+=======
+﻿using CarRentals.Models;
+using CarRentalsWebAPI.Interfaces;
+using System.Collections.Generic;
+>>>>>>> parent of 07f9100 (Created Generic Service Layer)
 
 namespace CarRentalsWebAPI.Services
 {
-    public class RentalService : Service<Rental>, IRentalService
+    public class RentalService : IRentalService
     {
-        public RentalService(IDataProcessing<Rental> repository) : base(repository) { }
+        private readonly IRentalRepository _repository;
 
-        public async override Task<Rental> CreateAsync(Rental element)
+        public RentalService(IRentalRepository repository)
         {
-            if (validateRental(element))
-                return await base.CreateAsync(element);
-            else
-                return null;
+            _repository = repository;
         }
 
-        public override Task<Rental> UpdateAsync(int id, Rental element)
+        public Rental Create(Rental rental)
         {
-            if (validateRental(element))
-                return base.UpdateAsync(id, element);
+            if(validateRental(rental))
+            {
+                return _repository.Create(rental);
+            }
             else
+            {
                 return null;
+            }
+        }
+
+        public void Delete(int id)
+        {
+            _repository.Delete(id);
+        }
+
+        public Rental Get(int id)
+        {
+            return _repository.Get(id);
+        }
+
+        public List<Rental> GetAll()
+        {
+            return _repository.GetAll();
+        }
+
+        public Rental Update(int id, Rental element)
+        {
+            if(validateRental(element))
+            {
+                return _repository.Update(id, element);
+            }
+            else
+            {
+                return null;
+            }
+            
         }
 
         private bool validateRental(Rental rental)
         {
-
+            
             if (rental.Car != null && rental.Customer != null && rental.End.Subtract(rental.Beginning).Days > 0)
             {
                 if (rental.Car.IsRented == false)

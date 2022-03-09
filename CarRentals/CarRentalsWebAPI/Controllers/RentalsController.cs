@@ -4,7 +4,6 @@ using CarRentalsWebAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace CarRentalsWebAPI.Controllers
 {
@@ -48,9 +47,9 @@ namespace CarRentalsWebAPI.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RentalDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetRental(int id)
+        public IActionResult GetRental(int id)
         {
-            var rental = await _rentalService.GetAsync(id);
+            var rental = _rentalService.Get(id);
 
             if (rental == null)
             {
@@ -71,9 +70,9 @@ namespace CarRentalsWebAPI.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RentalDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> PutRental(int id, RentalDto rental)
+        public IActionResult PutRental(int id, RentalDto rental)
         {
-            var toUpdate = await _rentalService.UpdateAsync(id, RentalDto.DtoToEntity(rental));
+            var toUpdate = _rentalService.Update(id, RentalDto.DtoToEntity(rental));
 
             if (toUpdate == null)
             {
@@ -93,10 +92,10 @@ namespace CarRentalsWebAPI.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RentalDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> PostRental(RentalDto rentalDto)
+        public IActionResult PostRental(RentalDto rentalDto)
         {
             var rental = RentalDto.DtoToEntity(rentalDto);
-            var rentalAdded = await _rentalService.CreateAsync(rental);
+            var rentalAdded = _rentalService.Create(rental);
 
             if (rentalAdded == null)
             {
@@ -114,9 +113,9 @@ namespace CarRentalsWebAPI.Controllers
         /// <response code="204">rental was succesfully deleted</response>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> DeleteRental(int id)
+        public IActionResult DeleteRental(int id)
         {
-            await _rentalService.DeleteAsync(id);
+            _rentalService.Delete(id);
 
             return NoContent();
         }

@@ -4,7 +4,6 @@ using CarRentalsWebAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace CarRentalsWebAPI.Controllers
 {
@@ -48,9 +47,9 @@ namespace CarRentalsWebAPI.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CustomerDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetCustomer(int id)
+        public IActionResult GetCustomer(int id)
         {
-            var customer = await _customerService.GetAsync(id);
+            var customer = _customerService.Get(id);
 
             if (customer == null)
             {
@@ -71,9 +70,9 @@ namespace CarRentalsWebAPI.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CustomerDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> PutCustomer(int id, CustomerDto customer)
+        public IActionResult PutCustomer(int id, CustomerDto customer)
         {
-            var toUpdate = await _customerService.UpdateAsync(id, CustomerDto.DtoToEntity(customer));
+            var toUpdate = _customerService.Update(id, CustomerDto.DtoToEntity(customer));
 
             if (toUpdate == null)
             {
@@ -93,10 +92,10 @@ namespace CarRentalsWebAPI.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CustomerDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> PostCustomer(CustomerDto customerDto)
+        public IActionResult PostCustomer(CustomerDto customerDto)
         {
             var customer = CustomerDto.DtoToEntity(customerDto);
-            var customerAdded = await _customerService.CreateAsync(customer);
+            var customerAdded = _customerService.Create(customer);
 
             if (customerAdded == null)
             {
@@ -114,9 +113,9 @@ namespace CarRentalsWebAPI.Controllers
         /// <response code="204">customer was succesfully deleted</response>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> DeleteCustomer(int id)
+        public IActionResult DeleteCustomer(int id)
         {
-            await _customerService.DeleteAsync(id);
+            _customerService.Delete(id);
 
             return NoContent();
         }

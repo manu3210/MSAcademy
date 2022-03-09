@@ -12,8 +12,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.OpenApi.Models;
+<<<<<<< HEAD
 using System.IO;
 using System.Reflection;
+=======
+>>>>>>> parent of 07f9100 (Created Generic Service Layer)
 
 namespace CarRentalsWebAPI
 {
@@ -40,8 +43,6 @@ namespace CarRentalsWebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<CarRentalsContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CarRentalsDB")));
-
-            services.AddScoped(typeof(IDataProcessing<>), typeof(Repository<>));
 
             services.AddScoped<IBrandRepository, BrandRepository>();
             services.AddScoped<IBrandService, BrandService>();

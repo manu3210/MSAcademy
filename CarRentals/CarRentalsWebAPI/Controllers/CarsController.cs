@@ -4,7 +4,6 @@ using CarRentalsWebAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace CarRentalsWebAPI.Controllers
 {
@@ -48,9 +47,9 @@ namespace CarRentalsWebAPI.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CarDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetCar(int id)
+        public IActionResult GetCar(int id)
         {
-            var car = await _carService.GetAsync(id);
+            var car = _carService.Get(id);
 
             if (car == null)
             {
@@ -71,9 +70,9 @@ namespace CarRentalsWebAPI.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CarDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> PutCar(int id, CarDto car)
+        public IActionResult PutCar(int id, CarDto car)
         {
-            var toUpdate = await _carService.UpdateAsync(id, CarDto.DtoToEntity(car));
+            var toUpdate = _carService.Update(id, CarDto.DtoToEntity(car));
 
             if (toUpdate == null)
             {
@@ -93,10 +92,10 @@ namespace CarRentalsWebAPI.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CarDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> PostCar(CarDto carDto)
+        public IActionResult PostCar(CarDto carDto)
         {
             var car = CarDto.DtoToEntity(carDto);
-            var carAdded = await _carService.CreateAsync(car);
+            var carAdded = _carService.Create(car);
 
             if (carAdded == null)
             {
@@ -114,9 +113,9 @@ namespace CarRentalsWebAPI.Controllers
         /// <response code="204">car was succesfully deleted</response>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> DeleteCar(int id)
+        public IActionResult DeleteCar(int id)
         {
-            await _carService.DeleteAsync(id);
+            _carService.Delete(id);
 
             return NoContent();
         }
