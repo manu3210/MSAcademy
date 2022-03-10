@@ -1,6 +1,8 @@
 ﻿using CarRentalsWebAPI.DTO;
 using CarRentalsWebAPI.Interfaces;
+using CarRentalsWebAPI.Mediator.Querys;
 using CarRentalsWebAPI.Models;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -12,11 +14,11 @@ namespace CarRentalsWebAPI.Controllers
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        private readonly ICustomerService _customerService;
+        private readonly IMediator _mediator;
 
-        public CustomersController(ICustomerService customerService)
+        public CustomersController(IMediator mediator)
         {
-            _customerService = customerService;
+            _mediator = mediator;
         }
 
         // GET: api/Customer
@@ -28,14 +30,7 @@ namespace CarRentalsWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CustomerDto>))]
         public async Task<IActionResult> GetCustomers()
         {
-            var list = new List<CustomerDto>();
-
-            foreach (Customer item in await _customerService.GetAll())
-            {
-                list.Add(new CustomerDto(item));
-            }
-
-            return Ok(list);
+            return Ok(await _mediator.Send(new GetAllCustomers()));
         }
 
         // GET: api/Customer/5
@@ -50,14 +45,14 @@ namespace CarRentalsWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetCustomer(int id)
         {
-            var customer = await _customerService.GetAsync(id);
+            var customer = await _mediator.Send(new GetCustomerById(id));
 
             if (customer == null)
             {
                 return NotFound();
             }
 
-            return Ok(new CustomerDto(customer));
+            return Ok(customer);
         }
 
         // PUT: api/Customer/5
@@ -73,14 +68,19 @@ namespace CarRentalsWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> PutCustomer(int id, CustomerDto customer)
         {
-            var toUpdate = await _customerService.UpdateAsync(id, CustomerDto.DtoToEntity(customer));
+            if (customer == null)
+            {
+                return BadRequest();
+            }
+
+            var toUpdate = await _mediator.Send(new UpdateCustomer(id, customer));
 
             if (toUpdate == null)
             {
                 return NotFound();
             }
 
-            return Ok(customer);
+            return Ok(toUpdate);
         }
 
         // POST: api/Customer
@@ -98,15 +98,14 @@ namespace CarRentalsWebAPI.Controllers
             if (customerDto == null)
                 return BadRequest();
 
-            var customer = CustomerDto.DtoToEntity(customerDto);
-            var customerAdded = await _customerService.CreateAsync(customer);
+            var customerAdded = await _mediator.Send(new CreateCustomer(customerDto));
 
             if (customerAdded == null)
             {
                 return BadRequest();
             }
 
-            return Ok(new CustomerDto(customerAdded));
+            return Ok(customerAdded);
         }
 
         // DELETE: api/Customer/5
@@ -119,7 +118,7 @@ namespace CarRentalsWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> DeleteCustomer(int id)
         {
-            await _customerService.DeleteAsync(id);
+            await _mediator.Send(new DeleteCustomer(id));
 
             return NoContent();
         }
