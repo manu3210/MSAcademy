@@ -1,9 +1,6 @@
-﻿using CarRentals.Interfaces;
-using CarRentalsWebAPI.Models;
-using Models;
-using System;
+﻿using System;
 
-namespace CarRentals.Models
+namespace CarRentalsWebAPI.Models
 {
     public class Rental : BaseModel
     {

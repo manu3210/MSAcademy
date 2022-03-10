@@ -1,7 +1,6 @@
 ﻿using CarRentalsWebAPI.Interfaces;
 using CarRentalsWebAPI.Models;
 using Microsoft.EntityFrameworkCore;
-using Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,9 +26,9 @@ namespace CarRentalsWebAPI.Repository
             return await _context.Cars.Where(c => c.Id == id).Include(b => b.Brand).FirstOrDefaultAsync();
         }
 
-        public override List<Car> GetAll()
+        public override async Task<List<Car>> GetAll()
         {
-            return _context.Cars.Include(b => b.Brand).ToList();
+            return await _context.Cars.Include(b => b.Brand).ToListAsync();
         }
     }
 }
