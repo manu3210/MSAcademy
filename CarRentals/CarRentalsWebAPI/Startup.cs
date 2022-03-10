@@ -4,6 +4,7 @@ using CarRentalsWebAPI.Repository;
 using CarRentalsWebAPI.Services;
 using CarRentalsWebAPI.Validations;
 using FluentValidation.AspNetCore;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -65,6 +66,7 @@ namespace CarRentalsWebAPI
 
                 c.IncludeXmlComments(XmlCommentsFilePath);
             });
+            services.AddMediatR(typeof(Startup).Assembly);
 
             services.AddFluentValidation(
                 fv => fv.RegisterValidatorsFromAssemblyContaining<BrandValidator>()

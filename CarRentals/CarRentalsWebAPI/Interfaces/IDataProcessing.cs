@@ -9,6 +9,6 @@ namespace CarRentalsWebAPI.Interfaces
          Task<T> GetAsync(int id);
          Task<T> UpdateAsync(int id, T element);
          Task DeleteAsync(int id);
-         List<T> GetAll();
+         Task<List<T>> GetAll();
     }
 }

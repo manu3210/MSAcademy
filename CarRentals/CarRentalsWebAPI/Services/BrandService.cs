@@ -17,7 +17,7 @@ namespace CarRentalsWebAPI.Services
 
         public async Task<Brand> CreateAsync(Brand brand)
         {
-            var list = _repository.GetAll();
+            var list = await _repository.GetAll();
 
             foreach(Brand item in list)
             {
@@ -42,9 +42,9 @@ namespace CarRentalsWebAPI.Services
             return await _repository.GetAsync(id);
         }
 
-        public List<Brand> GetAll()
+        public async Task<List<Brand>> GetAll()
         {
-            return _repository.GetAll();
+            return await _repository.GetAll();
         }
 
         public async Task<Brand> UpdateAsync(int id, Brand element)

@@ -1,6 +1,8 @@
 ﻿using CarRentalsWebAPI.DTO;
 using CarRentalsWebAPI.Interfaces;
+using CarRentalsWebAPI.Mediator.Querys;
 using CarRentalsWebAPI.Models;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -12,11 +14,11 @@ namespace CarRentalsWebAPI.Controllers
     [ApiController]
     public class BrandsController : ControllerBase
     {
-        private readonly IBrandService _brandService;
+        private readonly IMediator _mediator;
 
-        public BrandsController(IBrandService brandService)
+        public BrandsController(IMediator mediator)
         {
-            _brandService = brandService;
+            _mediator = mediator;
         }
 
         // GET: api/Brands
@@ -26,16 +28,9 @@ namespace CarRentalsWebAPI.Controllers
         /// <response code="200">Returns a brand list</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<BrandDto>))]
-        public IActionResult GetBrands()
+        public async Task<IActionResult> GetBrands()
         {
-            var list = new List<BrandDto>();
-
-            foreach (Brand item in _brandService.GetAll())
-            {
-                list.Add(new BrandDto(item));
-            }
-
-            return Ok(list);
+            return Ok(await _mediator.Send(new GetAllBrands()));
         }
 
         // GET: api/Brands/5
@@ -50,14 +45,14 @@ namespace CarRentalsWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetBrand(int id)
         {
-            var brand = await _brandService.GetAsync(id);
+            var brand = await _mediator.Send(new GetBrandById(id));
 
             if (brand == null)
             {
                 return NotFound();
             }
 
-            return Ok(new BrandDto(brand));
+            return Ok(brand);
         }
 
         // PUT: api/Brands/5
@@ -77,21 +72,20 @@ namespace CarRentalsWebAPI.Controllers
             {
                 return BadRequest();
             }
-            if(await _brandService.GetAsync(id) == null)
+
+            if(await _mediator.Send(new GetBrandById(id)) == null)
             {
                 return NotFound();
             }
 
-            var toUpdate = await _brandService.UpdateAsync(id, BrandDto.DtoToEntity(brand));
+            var toUpdate = await _mediator.Send(new UpdateBrand(id, brand));
 
             if (toUpdate == null)
             {
                 return NotFound();
             }
 
-            
-
-            return Ok(brand);
+            return Ok(toUpdate);
         }
 
         // POST: api/Brands
@@ -111,13 +105,12 @@ namespace CarRentalsWebAPI.Controllers
                 return BadRequest();
             }
 
-            var brand = BrandDto.DtoToEntity(brandDto);
-            var brandAdded = await _brandService.CreateAsync(brand);
+            var brandAdded = await _mediator.Send(new CreateBrand(brandDto));
 
             if(brandAdded == null)
                 return BadRequest();
 
-            return Ok(new BrandDto(brandAdded));
+            return Ok(brandAdded);
         }
 
         // DELETE: api/Brands/5
@@ -130,9 +123,10 @@ namespace CarRentalsWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> DeleteBrand(int id)
         {
-            await _brandService.DeleteAsync(id);
+            await _mediator.Send(new DeleteBrand(id));
 
             return NoContent();
         }
+
     }
 }

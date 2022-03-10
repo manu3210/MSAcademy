@@ -31,9 +31,9 @@ namespace CarRentalsWebAPI.Services
             return await _repository.GetAsync(id);
         }
 
-        public List<Car> GetAll()
+        public async Task<List<Car>> GetAll()
         {
-            return _repository.GetAll();
+            return await _repository.GetAll();
         }
 
         public async Task<Car> UpdateAsync(int id, Car element)

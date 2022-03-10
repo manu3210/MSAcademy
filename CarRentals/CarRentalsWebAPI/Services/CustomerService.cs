@@ -16,7 +16,7 @@ namespace CarRentalsWebAPI.Services
 
         public async Task<Customer> CreateAsync(Customer customer)
         {
-            var list = _repository.GetAll();
+            var list = await _repository.GetAll();
 
             foreach (Customer item in list)
             {
@@ -41,9 +41,9 @@ namespace CarRentalsWebAPI.Services
             return await _repository.GetAsync(id);
         }
 
-        public List<Customer> GetAll()
+        public async Task<List<Customer>> GetAll()
         {
-            return _repository.GetAll();
+            return await _repository.GetAll();
         }
 
         public async Task<Customer> UpdateAsync(int id, Customer element)

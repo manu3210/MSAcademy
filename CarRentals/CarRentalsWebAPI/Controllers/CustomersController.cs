@@ -26,11 +26,11 @@ namespace CarRentalsWebAPI.Controllers
         /// <response code="200">Returns a customer list</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CustomerDto>))]
-        public IActionResult GetCustomers()
+        public async Task<IActionResult> GetCustomers()
         {
             var list = new List<CustomerDto>();
 
-            foreach (Customer item in _customerService.GetAll())
+            foreach (Customer item in await _customerService.GetAll())
             {
                 list.Add(new CustomerDto(item));
             }

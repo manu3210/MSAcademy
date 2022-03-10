@@ -29,13 +29,13 @@ namespace CarRentalsWebAPI.Repository
                 .FirstOrDefaultAsync();
         }
 
-        public override List<Rental> GetAll()
+        public override async Task<List<Rental>> GetAll()
         {
-            return _context.Rentals
+            return await _context.Rentals
                 .Include(v => v.Car)
                 .ThenInclude(b => b.Brand)
                 .Include(c => c.Customer)
-                .ToList();
+                .ToListAsync();
         }
     }
 }
