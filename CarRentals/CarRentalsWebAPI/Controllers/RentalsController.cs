@@ -1,6 +1,8 @@
 ﻿using CarRentalsWebAPI.DTO;
 using CarRentalsWebAPI.Interfaces;
+using CarRentalsWebAPI.Mediator.Querys;
 using CarRentalsWebAPI.Models;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -12,11 +14,11 @@ namespace CarRentalsWebAPI.Controllers
     [ApiController]
     public class RentalsController : ControllerBase
     {
-        private readonly IRentalService _rentalService;
+        private readonly IMediator _mediator;
 
-        public RentalsController(IRentalService rentalService)
+        public RentalsController(IMediator mediator)
         {
-            _rentalService = rentalService;
+            _mediator = mediator;
         }
 
         // GET: api/Rentals
@@ -28,14 +30,7 @@ namespace CarRentalsWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<RentalDto>))]
         public async Task<IActionResult> GetRentals()
         {
-            var list = new List<RentalDto>();
-
-            foreach (Rental item in await _rentalService.GetAll())
-            {
-                list.Add(new RentalDto(item));
-            }
-
-            return Ok(list);
+            return Ok(await _mediator.Send(new GetAllRentals()));
         }
 
         // GET: api/Rentals/5
@@ -50,14 +45,14 @@ namespace CarRentalsWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetRental(int id)
         {
-            var rental = await _rentalService.GetAsync(id);
+            var rental = await _mediator.Send(new GetRentalById(id));
 
             if (rental == null)
             {
                 return NotFound();
             }
 
-            return Ok(new RentalDto(rental));
+            return Ok(rental);
         }
 
         // PUT: api/Rentals/5
@@ -76,14 +71,14 @@ namespace CarRentalsWebAPI.Controllers
             if (rental == null)
                 return BadRequest();
 
-            var toUpdate = await _rentalService.UpdateAsync(id, RentalDto.DtoToEntity(rental));
+            var toUpdate = await _mediator.Send(new UpdateRental(id, rental));
 
             if (toUpdate == null)
             {
                 return NotFound();
             }
 
-            return Ok(rental);
+            return Ok(toUpdate);
         }
 
         // POST: api/Rentals
@@ -101,15 +96,14 @@ namespace CarRentalsWebAPI.Controllers
             if (rentalDto == null)
                 return BadRequest();
 
-            var rental = RentalDto.DtoToEntity(rentalDto);
-            var rentalAdded = await _rentalService.CreateAsync(rental);
+            var rentalAdded = await _mediator.Send(new CreateRental(rentalDto));
 
             if (rentalAdded == null)
             {
                 return BadRequest();
             }
 
-            return Ok(new RentalDto(rentalAdded));
+            return Ok(rentalAdded);
         }
 
         // DELETE: api/Rentals/5
@@ -122,8 +116,7 @@ namespace CarRentalsWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> DeleteRental(int id)
         {
-            await _rentalService.DeleteAsync(id);
-
+            await _mediator.Send(DeleteRental(id));
             return NoContent();
         }
     }
