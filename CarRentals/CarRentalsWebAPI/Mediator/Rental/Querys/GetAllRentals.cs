@@ -1,4 +1,5 @@
-﻿using CarRentalsWebAPI.DTO;
+﻿using AutoMapper;
+using CarRentalsWebAPI.DTO;
 using CarRentalsWebAPI.Interfaces;
 using CarRentalsWebAPI.Models;
 using MediatR;
@@ -12,9 +13,11 @@ namespace CarRentalsWebAPI.Mediator.Querys
     public class GetAllRentalsHandler : IRequestHandler<GetAllRentals, IEnumerable<RentalDto>>
     {
         private readonly IRentalRepository _rentalRepository;
-        public GetAllRentalsHandler(IRentalRepository rentalRepository)
+        private readonly IMapper _mapper;
+        public GetAllRentalsHandler(IRentalRepository rentalRepository, IMapper mapper)
         {
             _rentalRepository = rentalRepository;
+            _mapper = mapper;
         }
         public async Task<IEnumerable<RentalDto>> Handle(GetAllRentals request, CancellationToken cancellationToken)
         {
@@ -22,7 +25,7 @@ namespace CarRentalsWebAPI.Mediator.Querys
 
             foreach (Rental item in await _rentalRepository.GetAll())
             {
-                list.Add(new RentalDto(item));
+                list.Add(_mapper.Map<RentalDto>(item));
             }
 
             return list;

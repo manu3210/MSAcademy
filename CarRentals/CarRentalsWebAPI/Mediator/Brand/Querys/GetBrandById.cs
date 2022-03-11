@@ -1,4 +1,5 @@
-﻿using CarRentalsWebAPI.DTO;
+﻿using AutoMapper;
+using CarRentalsWebAPI.DTO;
 using CarRentalsWebAPI.Repository;
 using MediatR;
 using System.Threading;
@@ -16,15 +17,17 @@ namespace CarRentalsWebAPI.Mediator.Querys
         public class GetBrandsByIdHandler : IRequestHandler<GetBrandById, BrandDto>
         {
             private readonly IBrandRepository _brandRepository;
-            public GetBrandsByIdHandler(IBrandRepository brandRepository)
+            private readonly IMapper _mapper;
+            public GetBrandsByIdHandler(IBrandRepository brandRepository, IMapper mapper)
             {
                 _brandRepository = brandRepository;
+                _mapper = mapper;
             }
 
             public async Task<BrandDto> Handle(GetBrandById request, CancellationToken cancellationToken)
             {
                 var brand = await _brandRepository.GetAsync(request.Id);
-                return (brand == null) ? null : new BrandDto(brand);
+                return (brand == null) ? null : _mapper.Map<BrandDto>(brand);
             }
         }
     }

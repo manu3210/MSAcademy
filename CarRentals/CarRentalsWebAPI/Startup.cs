@@ -68,6 +68,8 @@ namespace CarRentalsWebAPI
             });
             services.AddMediatR(typeof(Startup).Assembly);
 
+            services.AddAutoMapper(typeof(Startup).Assembly);
+
             services.AddFluentValidation(
                 fv => fv.RegisterValidatorsFromAssemblyContaining<BrandValidator>()
                 .RegisterValidatorsFromAssemblyContaining<CarValidator>()

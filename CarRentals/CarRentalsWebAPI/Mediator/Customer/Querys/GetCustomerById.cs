@@ -1,4 +1,5 @@
-﻿using CarRentalsWebAPI.DTO;
+﻿using AutoMapper;
+using CarRentalsWebAPI.DTO;
 using CarRentalsWebAPI.Interfaces;
 using MediatR;
 using System.Threading;
@@ -16,15 +17,17 @@ namespace CarRentalsWebAPI.Mediator.Querys
         public class GetCustomerByIdHandler : IRequestHandler<GetCustomerById, CustomerDto>
         {
             private readonly ICustomerRepository _customerRepository;
-            public GetCustomerByIdHandler(ICustomerRepository customerRepository)
+            private readonly IMapper _mapper;
+            public GetCustomerByIdHandler(ICustomerRepository customerRepository, IMapper mapper)
             {
                 _customerRepository = customerRepository;
+                _mapper = mapper;
             }
 
             public async Task<CustomerDto> Handle(GetCustomerById request, CancellationToken cancellationToken)
             {
                 var customer = await _customerRepository.GetAsync(request.Id);
-                return (customer == null) ? null : new CustomerDto(customer);
+                return (customer == null) ? null : _mapper.Map<CustomerDto>(customer);
             }
         }
     }
