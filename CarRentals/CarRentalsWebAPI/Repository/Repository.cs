@@ -1,13 +1,13 @@
-﻿using CarRentals.Interfaces;
-using CarRentalsWebAPI.Interfaces;
+﻿using CarRentalsWebAPI.Interfaces;
 using CarRentalsWebAPI.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace CarRentalsWebAPI.Repository
 {
-    public class Repository<T> : IDataProcessing<T> where T : BaseModel
+    public abstract class Repository<T> : IDataProcessing<T> where T : BaseModel
     {
         protected readonly CarRentalsContext _context;
 
@@ -18,7 +18,7 @@ namespace CarRentalsWebAPI.Repository
 
         public async Task<T> CreateAsync(T element)
         {
-            _context.Set<T>().Add(element);
+            await _context.Set<T>().AddAsync(element);
             await _context.SaveChangesAsync();
 
             return element;
@@ -37,9 +37,9 @@ namespace CarRentalsWebAPI.Repository
             return await _context.Set<T>().FindAsync(id);
         }
 
-        public virtual List<T> GetAll()
+        public virtual async Task<List<T>> GetAll()
         {
-            return _context.Set<T>().ToList();
+            return await _context.Set<T>().ToListAsync();
         }
 
         public async Task<T> UpdateAsync(int id, T element)
@@ -58,7 +58,7 @@ namespace CarRentalsWebAPI.Repository
             return toUpdate;
         }
 
-        protected virtual void UpdateData(T element, T toUpdate) { }
+        protected abstract void UpdateData(T element, T toUpdate);
 
         public bool Exist(int id)
         {

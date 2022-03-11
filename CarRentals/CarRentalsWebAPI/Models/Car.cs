@@ -1,8 +1,6 @@
 ﻿using CarRentals.Enum;
-using CarRentals.Interfaces;
-using CarRentalsWebAPI.Models;
 
-namespace Models
+namespace CarRentalsWebAPI.Models
 {
     public class Car : BaseModel
     {
